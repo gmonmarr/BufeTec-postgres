@@ -12,7 +12,6 @@ const Usuario = sequelize.define('Usuario', {
     field: 'ID_Usuario'
   },
   nombre: DataTypes.TEXT,
-  apellido: DataTypes.TEXT,
   fecha_nacimiento: DataTypes.DATE,
   sexo: DataTypes.STRING(10),
   email: {
