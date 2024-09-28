@@ -32,6 +32,7 @@ const clienteRoutes = require("./routes/clientes");
 const alumnoRoutes = require("./routes/alumnos");
 const casoRoutes = require("./routes/casos");
 const citaRoutes = require("./routes/citas");
+const chatRoutes = require('./routes/chat');
 
 // Use routes
 app.use("/api/usuarios", usuarioRoutes);
@@ -40,6 +41,7 @@ app.use("/api/clientes", clienteRoutes);
 app.use("/api/alumnos", alumnoRoutes);
 app.use("/api/casos", casoRoutes);
 app.use("/api/citas", citaRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Start the server
 const server = app.listen(port, () => {
