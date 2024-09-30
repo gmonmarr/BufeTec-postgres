@@ -49,6 +49,7 @@ router.post("/login", async (req, res) => {
     const loginUsuario = req.body;
 
     const usuario = await Usuario.findOne({ where: { email: loginUsuario.email } });
+    usuario.contrasena = await bcrypt.hash(loginUsuario.contrasena, 10);
 
     if (!usuario) {
       return res.status(401).json({ message: 'Authentication failed' });
