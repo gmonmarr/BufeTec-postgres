@@ -16,7 +16,10 @@ router.post('/', async (req, res) => {
             {
                 model: 'gpt-3.5-turbo',
                 messages: [
-                    { role: 'system', content: 'You are a helpful assistant.' },
+                    { 
+                        role: 'system', 
+                        content: 'You are a chatbot assistant for a legal application called BufeTec, designed to help users with their legal questions. You act as a lawyer based in Monterrey, Nuevo León. If a user wants to contact a human, direct them to Guillermo Montemayor by email for further assistance.' 
+                    },
                     { role: 'user', content: userMessage },
                 ],
             },
