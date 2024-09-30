@@ -2,12 +2,14 @@
 
 require("dotenv").config();
 const express = require("express");
+const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3001;
 const sequelize = require("./config/database");
 
 // Middleware to parse JSON requests
 app.use(express.json());
+app.use(cors());
 
 // Test the database connection and sync models
 sequelize
