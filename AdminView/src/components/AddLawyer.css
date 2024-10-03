@@ -1,0 +1,178 @@
+/* Contenedor principal para el formulario y la tabla */
+.add-lawyer-container {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  justify-content: space-between;
+  padding: 40px;
+  background-color: #f7f8fa;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Formulario estilizado */
+.add-lawyer-form-container {
+  flex: 1;
+  max-width: 500px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.add-lawyer-title {
+  font-size: 1.8rem;
+  color: #2541B2;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.add-lawyer-input-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.add-lawyer-input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.add-lawyer-input:focus {
+  border-color: #2541B2;
+}
+
+.add-lawyer-label {
+  margin-bottom: 8px;
+  font-size: 1rem;
+  color: #666;
+}
+
+.add-lawyer-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #2541B2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-lawyer-button:hover {
+  background-color: #1f3a93;
+}
+
+/* Estilo del banner de confirmación */
+.add-lawyer-confirmation-banner {
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  animation: slideIn 0.5s ease-out;
+}
+
+.add-lawyer-confirmation-banner.success {
+  background-color: #28a745;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.add-lawyer-confirmation-banner.error {
+  background-color: #ff6b6b;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Animación de entrada */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilos de la tabla de usuarios */
+.users-grid-container {
+  flex: 1;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.users-grid-title {
+  font-size: 1.6rem;
+  color: #2541B2;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.users-grid-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-grid-table th, .users-grid-table td {
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 0.9rem;
+}
+
+.users-grid-table th {
+  background-color: #2541B2;
+  color: white;
+  font-size: 1rem;
+}
+
+.users-grid-table tr:hover {
+  background-color: #f0f4ff;
+}
+
+.select-user-button {
+  padding: 8px 16px;
+  background-color: #2541B2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.select-user-button:hover {
+  background-color: #1f3a93;
+}
+
+.no-users {
+  text-align: center;
+  color: #ff6b6b;
+  font-size: 1.1rem;
+  padding: 20px;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .add-lawyer-container {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .add-lawyer-form-container, .users-grid-container {
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+}

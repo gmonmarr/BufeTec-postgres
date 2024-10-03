@@ -1,0 +1,93 @@
+/* Dashboard-specific container */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f4f7f8; /* Fondo suave */
+    min-height: 100vh;
+  }
+  
+  /* Dashboard title */
+  .dashboard-title {
+    font-size: 2.5rem;
+    color: #2541B2;
+    margin-bottom: 40px;
+  }
+  
+  /* Section specific to the grid layout for Lawyers and Clients */
+  .dashboard-grid-section {
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 40px;
+  }
+  
+  /* Section header for Lawyers and Clients */
+  .dashboard-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Section title */
+  .dashboard-section-title {
+    font-size: 1.8rem;
+    color: #333;
+  }
+  
+  /* Add button specific to Dashboard */
+  .dashboard-add-button {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dashboard-add-button:hover {
+    background-color: #ff4d4d;
+  }
+  
+  /* Grid specific to Dashboard */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  /* Grid item for individual cards */
+  .dashboard-grid-item {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .dashboard-grid-item:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Text inside the grid item */
+  .dashboard-grid-item p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+  }
+  
+  .dashboard-grid-item strong {
+    font-size: 1.3rem;
+    color: #2541B2;
+  }
+  
+  /* Media query to ensure responsiveness */
+  @media (max-width: 768px) {
+    .dashboard-grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+  }
+  
