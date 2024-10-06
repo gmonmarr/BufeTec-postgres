@@ -4,9 +4,10 @@ const express = require('express');
 const router = express.Router();
 const Admin = require('../model/Admin');
 const Usuario = require('../model/Usuario');
+const verifyToken = require('../middleware/auth');
 
-// Get all Admins
-router.get('/', async (req, res) => {
+// Get all Admins (Only Admin can access)
+router.get('/', verifyToken(['Admin']), async (req, res) => {
   try {
     const admins = await Admin.findAll({
       include: {
@@ -20,8 +21,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get a specific Admin by ID
-router.get('/:id', async (req, res) => {
+// Get a specific Admin by ID (Only Admin can access)
+router.get('/:id', verifyToken(['Admin']), async (req, res) => {
   try {
     const admin = await Admin.findByPk(req.params.id, {
       include: {
@@ -40,8 +41,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Create a new Admin
-router.post('/', async (req, res) => {
+// Create a new Admin (Only Admin can create)
+router.post('/', verifyToken(['Admin']), async (req, res) => {
   try {
     const { id_usuario } = req.body;
 
@@ -51,7 +52,6 @@ router.post('/', async (req, res) => {
       return res.status(404).json({ message: 'Usuario not found' });
     }
 
-    // Create the Admin
     const newAdmin = await Admin.create({
       id_usuario
     });
@@ -62,8 +62,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Delete an Admin
-router.delete('/:id', async (req, res) => {
+// Delete an Admin (Only Admin can delete, Admin cannot delete another Admin)
+router.delete('/:id', verifyToken(['Admin']), async (req, res) => {
   try {
     const admin = await Admin.findByPk(req.params.id);
 
