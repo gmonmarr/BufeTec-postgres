@@ -1,9 +1,12 @@
+// routes/chat.js
 
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const verifyToken = require('../middleware/auth');  // Import token validation middleware
 
-router.post('/', async (req, res) => {
+// Add token validation middleware to the route
+router.post('/', verifyToken(), async (req, res) => {
     const userMessage = req.body.message;
 
     if (!userMessage) {
@@ -26,7 +29,7 @@ router.post('/', async (req, res) => {
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+                    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,  // OpenAI API Key
                 },
             }
         );
