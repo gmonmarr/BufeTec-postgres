@@ -43,4 +43,19 @@ export const getUsers = () => {
   return api.get('/usuarios');
 }
 
+export const modifyUserRole = (id, data) => {
+  return api.put(`/usuarios/${id}/role`, data);
+};
+
+// Función para obtener archivos de un usuario por su ID
+export const getUserFiles = (userId) => {
+  return api.get(`/files/userFiles/${userId}`);
+};
+
+// Función para eliminar un archivo por su ID
+export const deleteFile = (id) => {
+  return api.delete(`/files/delete/${id}`);
+};
+
+
 export default api;

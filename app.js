@@ -6,10 +6,11 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3001;
 const sequelize = require("./config/database");
-
+const fileUpload = require('express-fileupload');
 // Middleware to parse JSON requests
 app.use(express.json());
 app.use(cors());
+app.use(fileUpload());
 
 // Test the database connection and sync models
 sequelize
@@ -35,6 +36,7 @@ const clienteRoutes = require("./routes/clientes");
 const alumnoRoutes = require("./routes/alumnos");
 const casoRoutes = require("./routes/casos");
 const chatRoutes = require('./routes/chat');
+const fileRoutes = require('./routes/Files');
 
 // Use routes
 app.use("/api/usuarios", usuarioRoutes);
@@ -44,6 +46,7 @@ app.use("/api/alumnos", alumnoRoutes);
 app.use("/api/casos", casoRoutes);
 app.use("/api/admin", adminRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/files', fileRoutes);
 
 // Start the server
 const server = app.listen(port, () => {

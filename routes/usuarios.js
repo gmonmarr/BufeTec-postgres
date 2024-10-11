@@ -39,14 +39,18 @@ router.put("/:id", verifyToken(['Admin', 'Abogado', 'Alumno']), async (req, res)
 router.put("/:id/role", verifyToken(['Admin', 'Abogado', 'Alumno']), async (req, res) => {
   try {
     const usuario = await Usuario.findByPk(req.params.id);
-    const { newRole } = req.body;
+    const { newRole, direccion, especialidad, experiencia } = req.body;
 
     if (!usuario) {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    if (!newRole) {
+      return res.status(400).json({ message: 'New role is required' });
+    }
+
     // Check role hierarchy before updating
-    const userRole = req.user.role;  // Get role from token
+    const userRole = req.user.role;
     const roleHierarchy = ['Usuario', 'Cliente', 'Alumno', 'Abogado', 'Admin'];
 
     if (roleHierarchy.indexOf(newRole) > roleHierarchy.indexOf(userRole)) {
@@ -61,25 +65,38 @@ router.put("/:id/role", verifyToken(['Admin', 'Abogado', 'Alumno']), async (req,
 
     // Handle role promotions and demotions
     if (newRole === 'Abogado') {
-      // Add to Abogado table if not already there
       const abogadoExists = await Abogado.findOne({ where: { id_usuario: usuario.id } });
       if (!abogadoExists) {
-        await Abogado.create({ id_usuario: usuario.id });
+        await Abogado.create({
+          id_usuario: usuario.id,
+          especialidad: especialidad || null,  // Si no se proporciona, será null
+          experiencia: experiencia || null     // Si no se proporciona, será null
+        });
       }
-      // Remove from Alumno if exists
+      await Cliente.destroy({ where: { id_usuario: usuario.id } });
       await Alumno.destroy({ where: { id_usuario: usuario.id } });
     } else if (newRole === 'Alumno') {
-      // Add to Alumno table if not already there
       const alumnoExists = await Alumno.findOne({ where: { id_usuario: usuario.id } });
       if (!alumnoExists) {
         await Alumno.create({ id_usuario: usuario.id });
       }
-      // Remove from Abogado if exists
       await Abogado.destroy({ where: { id_usuario: usuario.id } });
-    } else {
-      // Remove from both Abogado and Alumno tables if the role is downgraded to Cliente or Usuario
+      await Cliente.destroy({ where: { id_usuario: usuario.id } });
+    } else if (newRole === 'Cliente') {
+      // Add to Cliente table if not already there, allowing empty direccion
+      const clienteExists = await Cliente.findOne({ where: { id_usuario: usuario.id } });
+      if (!clienteExists) {
+        await Cliente.create({
+          id_usuario: usuario.id,
+          direccion: direccion || null  // Permitir que sea nulo si no se proporciona
+        });
+      }
       await Abogado.destroy({ where: { id_usuario: usuario.id } });
       await Alumno.destroy({ where: { id_usuario: usuario.id } });
+    } else {
+      await Abogado.destroy({ where: { id_usuario: usuario.id } });
+      await Alumno.destroy({ where: { id_usuario: usuario.id } });
+      await Cliente.destroy({ where: { id_usuario: usuario.id } });
     }
 
     res.status(200).json({ message: 'User role updated successfully' });
@@ -87,6 +104,7 @@ router.put("/:id/role", verifyToken(['Admin', 'Abogado', 'Alumno']), async (req,
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // Register a new Usuario
 router.post("/register", async (req, res) => {
@@ -113,7 +131,7 @@ router.post("/register", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
+}); 
 
 // Login a Usuario
 router.post("/login", async (req, res) => {

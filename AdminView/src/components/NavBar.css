@@ -1,0 +1,37 @@
+/* Estilo de la barra de navegación */
+.navbar {
+  width: 100%;
+  background-color: #131313;
+  display: flex;
+  justify-content: space-around; /* Distribuye los botones de manera equitativa */
+  align-items: center;
+  padding: 1px 0; /* Añade algo de espacio vertical */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Asegura que la navbar esté siempre por encima del contenido */
+}
+
+/* Estilo de los botones de navegación */
+.nav-button {
+  color: white;
+  font-size: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  transition: background-color 0.3s;
+}
+
+.nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Cambia el fondo cuando se pasa el ratón */
+}
+
+.logout {
+  font-weight: bold; /* Hace que el botón de logout sea más llamativo */
+  color: #ff4d4d; /* Color rojo para el botón de logout */
+}
+
+.logout:hover {
+  background-color: rgba(255, 0, 0, 0.2); /* Cambia el fondo en hover */
+}

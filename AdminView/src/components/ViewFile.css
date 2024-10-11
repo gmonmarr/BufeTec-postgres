@@ -1,0 +1,116 @@
+.view-files-layout {
+    padding: 20px;
+    background-color: #f0f2f5;
+  }
+  
+  .page-title {
+    font-size: 2.5rem;
+    color: #2541B2;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  /* Contenedor para el grid de usuarios y la lista de archivos */
+  .content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  .user-select-container {
+    flex: 1 1 40%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .section-title {
+    font-size: 1.8rem;
+    color: #2541B2;
+    margin-bottom: 20px;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .users-grid-wrapper {
+    overflow-x: auto;
+  }
+  
+  .users-grid-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+  }
+  
+  .users-grid-table th, .users-grid-table td {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    white-space: nowrap;
+  }
+  
+  .users-grid-table th {
+    background-color: #2541B2;
+    color: white;
+  }
+  
+  .users-grid-table tr:hover {
+    background-color: #f0f4ff;
+  }
+  
+  .select-user-button {
+    background-color: #2541B2;
+    color: white;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .select-user-button:hover {
+    background-color: #1f3a93;
+  }
+  
+  .user-files-container {
+    flex: 1 1 60%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .file-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .file-item {
+    margin-bottom: 10px;
+  }
+  
+  .file-item a {
+    color: #2541B2;
+    text-decoration: none;
+  }
+  
+  .file-item a:hover {
+    text-decoration: underline;
+  }
+  
+  .no-users {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #dc3545;
+    margin-top: 20px;
+  }
+  

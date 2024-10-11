@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
-import AddLawyer from './components/AddLawyer';
-import AddClient from './components/AddClient';
+import ModifyRole from './components/ModifyRole';
+import ViewFile from './components/ViewFile';
 import Login from './components/Login';
 
 const App = () => {
@@ -47,12 +47,12 @@ const App = () => {
           element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}
         />
         <Route
-          path="/add-lawyer"
-          element={isAuthenticated ? <AddLawyer /> : <Navigate to="/login" />}
+          path="/change-user-role"
+          element={isAuthenticated ? <ModifyRole /> : <Navigate to="/login" />}
         />
         <Route
-          path="/add-client"
-          element={isAuthenticated ? <AddClient /> : <Navigate to="/login" />}
+          path="/view-file"
+          element={isAuthenticated ? <ViewFile /> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>
