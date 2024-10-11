@@ -4,18 +4,28 @@ const express = require('express');
 const router = express.Router();
 const Abogado = require('../model/Abogado');
 const verifyToken = require('../middleware/auth');
+const Usuario = require('../model/Usuario');
 
 // Get all Abogados (Only Admin and Abogado can access)
 router.get('/', verifyToken(['Admin', 'Abogado']), async (req, res) => {
   try {
     const abogados = await Abogado.findAll({
       include: {
-        model: Usuario, 
-        attributes: ['nombre', 'email', 'numero_telefono'] 
+        model: Usuario, // Join with Usuario table
+        attributes: ['nombre', 'email', 'numero_telefono']  // Select specific fields from Usuario
       }
     });
 
-    res.json(abogados); 
+    // Format the response to include only the relevant fields
+    const formattedAbogados = abogados.map(abogado => ({
+      especialidad: abogado.especialidad,
+      experiencia: abogado.experiencia,
+      nombre: abogado.Usuario.nombre,
+      email: abogado.Usuario.email,
+      numero_telefono: abogado.Usuario.numero_telefono
+    }));
+
+    res.json(formattedAbogados);  // Send the formatted response
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
