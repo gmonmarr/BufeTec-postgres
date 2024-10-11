@@ -8,12 +8,19 @@ const verifyToken = require('../middleware/auth');
 // Get all Abogados (Only Admin and Abogado can access)
 router.get('/', verifyToken(['Admin', 'Abogado']), async (req, res) => {
   try {
-    const abogados = await Abogado.findAll();
-    res.json(abogados);
+    const abogados = await Abogado.findAll({
+      include: {
+        model: Usuario, 
+        attributes: ['nombre', 'email', 'numero_telefono'] 
+      }
+    });
+
+    res.json(abogados); 
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // Create a new Abogado (Only Admin can promote to Admin, Abogado can promote up to their level)
 router.post('/', verifyToken(['Admin', 'Abogado']), async (req, res) => {
