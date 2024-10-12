@@ -53,7 +53,7 @@ router.delete('/deleteBibliotecaFile/:id', verifyToken(['Admin', 'Abogado', 'Alu
 });
 
 // Ruta para obtener todos los archivos del usuario con id 3 (biblioteca)
-router.get('/getBibliotecaFiles', verifyToken(['Admin', 'Abogado', 'Alumno']), async (req, res) => {
+router.get('/getBibliotecaFiles', async (req, res) => {
   try {
     // Buscamos todos los archivos subidos por el usuario con id 3
     const files = await File.findAll({
@@ -178,7 +178,6 @@ router.get('/getFiles', verifyToken(['Admin', 'Abogado', 'Cliente', 'Alumno']), 
 });
 
 
-
 // Ruta para obtener todos los archivos de un usuario específico (solo para Admin, Abogado, Alumno)
 router.get('/userFiles/:userId', verifyToken(['Admin', 'Abogado', 'Alumno']), async (req, res) => {
   try {
@@ -194,13 +193,26 @@ router.get('/userFiles/:userId', verifyToken(['Admin', 'Abogado', 'Alumno']), as
       return res.status(404).json({ message: 'No files found for this user' });
     }
 
-    // Generamos las URLs presignadas
-    const presignedUrls = await Promise.all(files.map(async (file) => {
+    // Generamos las URLs presignadas y extraemos el nombre del archivo
+    const filesData = await Promise.all(files.map(async (file) => {
       const presignedUrl = await getPresignedUrl(file.url_del_pdf);
-      return presignedUrl;
+
+      // Extraemos el nombre del archivo
+      let fileName = file.url_del_pdf.substring(
+        file.url_del_pdf.lastIndexOf('/') + 1,
+        file.url_del_pdf.indexOf('?') !== -1 ? file.url_del_pdf.indexOf('?') : file.url_del_pdf.length
+      );
+
+      // Removemos el prefijo del user_id (antes del primer guion bajo '_')
+      fileName = fileName.substring(fileName.indexOf('_') + 1); // Remueve el "user_id_" del nombre del archivo
+
+      return {
+        presignedUrl,  // La URL presignada
+        fileName       // El nombre del archivo sin el user_id
+      };
     }));
 
-    res.status(200).json(presignedUrls);
+    res.status(200).json(filesData); // Devolvemos la lista de archivos con URL y nombre
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error fetching files' });

@@ -42,9 +42,24 @@
   
   .file-item {
     margin-bottom: 15px;
-    display: flex;
-    justify-content: space-between;
+  }
+  
+  .file-info {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
     align-items: center;
+  }
+  
+  .file-name {
+    font-size: 16px;
+    color: #2541B2;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .file-name:hover {
+    text-decoration: underline;
   }
   
   .delete-file-button {
@@ -52,8 +67,9 @@
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 8px;
+    padding: 6px 12px;
     cursor: pointer;
+    font-size: 14px;
     transition: background-color 0.3s ease;
   }
   
@@ -77,5 +93,6 @@
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;
+    font-size: 16px;
   }
   

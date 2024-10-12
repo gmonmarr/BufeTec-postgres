@@ -8,18 +8,19 @@ const Biblioteca = () => {
   const [message, setMessage] = useState(''); // Mensaje para el estado de operaciones (exitoso/error)
   const [fileToUpload, setFileToUpload] = useState(null); // Almacena el archivo que se subirá
 
+  // Función para cargar los archivos de la biblioteca
+  const fetchBibliotecaFiles = async () => {
+    try {
+      const response = await getBibliotecaFiles(); // Llamamos a la API para obtener los archivos
+      setBibliotecaFiles(response.data); // Guardamos los archivos en el estado
+      setMessage(''); // Limpiamos cualquier mensaje previo
+    } catch (error) {
+      setMessage('Error fetching biblioteca files');
+    }
+  };
+
   // Cargar los archivos de la biblioteca al montar el componente
   useEffect(() => {
-    const fetchBibliotecaFiles = async () => {
-      try {
-        const response = await getBibliotecaFiles(); // Llamamos a la API para obtener los archivos
-        setBibliotecaFiles(response.data); // Guardamos los archivos en el estado
-        setMessage(''); // Limpiamos cualquier mensaje previo
-      } catch (error) {
-        setMessage('Error fetching biblioteca files');
-      }
-    };
-
     fetchBibliotecaFiles();
   }, []);
 
@@ -50,10 +51,10 @@ const Biblioteca = () => {
     formData.append('file', fileToUpload); // Añadimos el archivo al formData
 
     try {
-      const response = await uploadBibliotecaFile(formData); // Llamamos a la API para subir el archivo
+      await uploadBibliotecaFile(formData); // Llamamos a la API para subir el archivo
       setMessage('File uploaded successfully');
-      setBibliotecaFiles((prevFiles) => [...prevFiles, response.data]); // Añadimos el nuevo archivo a la lista
       setFileToUpload(null); // Limpiamos el archivo seleccionado
+      fetchBibliotecaFiles(); // Refrescamos el grid para mostrar el archivo recién subido
     } catch (error) {
       setMessage('Error uploading file');
     }
@@ -77,12 +78,14 @@ const Biblioteca = () => {
               <ul className="file-list">
                 {bibliotecaFiles.map((file, index) => (
                   <li key={index} className="file-item">
-                    <a href={file.presignedUrl} target="_blank" rel="noopener noreferrer">
-                      {file.fileName}
-                    </a>
-                    <button onClick={() => handleDelete(file.id)} className="delete-file-button">
-                      Delete
-                    </button>
+                    <div className="file-info">
+                      <a href={file.presignedUrl} target="_blank" rel="noopener noreferrer" className="file-name">
+                        {file.fileName}
+                      </a>
+                      <button onClick={() => handleDelete(file.id)} className="delete-file-button">
+                        Delete
+                      </button>
+                    </div>
                   </li>
                 ))}
               </ul>
