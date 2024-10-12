@@ -1,7 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Caso = require('./Caso'); // Import the Caso model
-const CasoFile = require('./CasoFile'); // Import the join table
 
 const File = sequelize.define('File', {
   id: {
