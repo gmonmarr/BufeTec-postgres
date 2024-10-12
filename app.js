@@ -43,7 +43,7 @@ const clienteRoutes = require("./routes/clientes");
 const alumnoRoutes = require("./routes/alumnos");
 const casoRoutes = require("./routes/casos");
 const chatRoutes = require("./routes/chat");
-const fileRoutes = require("./routes/files");
+const fileRoutes = require("./routes/Files");
 const bibliotecaRoutes = require("./routes/biblioteca");
 
 // Use routes
