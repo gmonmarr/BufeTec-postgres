@@ -3,12 +3,15 @@
 const express = require('express');
 const router = express.Router();
 const Caso = require('../model/Caso');
+const Abogado = require('../model/Abogado');
 const verifyToken = require('../middleware/auth'); // Import the existing middleware
 
 // Get all Casos for the Abogado from the token
 router.get('/', verifyToken(['Admin', 'Abogado']), async (req, res) => {
   try {
-    const abogadoId = req.user.id; // Extract the Abogado ID from the verified JWT token
+    const abogadoUerId = req.user.id; // Extract the Abogado ID from the verified JWT token
+
+    const abogadoId = await Abogado.findOne({ where: { id_usuario: abogadoUerId } });
     
     if (req.user.role === 'Abogado') {
       // Return only cases that belong to the Abogado
