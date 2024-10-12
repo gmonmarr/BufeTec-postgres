@@ -1,10 +1,7 @@
-// model/Caso.js
-
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Abogado = require('./Abogado');
-const Cliente = require('./Cliente');
-const Alumno = require('./Alumno');
+const File = require('./File'); // Import the File model
+const CasoFile = require('./CasoFile'); // Import the join table
 
 const Caso = sequelize.define('Caso', {
   id: {
@@ -25,29 +22,14 @@ const Caso = sequelize.define('Caso', {
   estado: DataTypes.STRING(50),
   id_abogado: {
     type: DataTypes.INTEGER,
-    references: {
-      model: Abogado,
-      key: 'ID_Abogado'
-    },
-    allowNull: false,
-    onDelete: 'SET NULL'
+    allowNull: false
   },
   id_cliente: {
     type: DataTypes.INTEGER,
-    references: {
-      model: Cliente,
-      key: 'ID_Cliente'
-    },
-    allowNull: false,
-    onDelete: 'CASCADE'
+    allowNull: false
   },
   id_alumno: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: Alumno,
-      key: 'ID_Alumno'
-    },
-    onDelete: 'SET NULL'
+    type: DataTypes.INTEGER
   }
 });
 

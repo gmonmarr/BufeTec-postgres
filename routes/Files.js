@@ -8,26 +8,45 @@ const router = express.Router();
 const BIBLIOTECA_USER_ID = 3;
 
 // Ruta para subir un archivo al usuario con id 3 (biblioteca)
-router.post('/uploadBibliotecaFile', verifyToken(['Admin', 'Abogado', 'Alumno']), async (req, res) => {
+router.post('/upload', verifyToken(['Admin', 'Abogado', 'Cliente', 'Alumno']), async (req, res) => {
   try {
-    const file = req.files.file; // Asume que usas un middleware como express-fileupload para manejar los archivos
+    const user_id = req.user.id; // Get the user ID from the token
+    const { numero_expediente } = req.body; // Get the case number from the request body
 
-    // Cambia el nombre del archivo para incluir el id del usuario biblioteca (3) al principio
-    file.name = `${BIBLIOTECA_USER_ID}_${file.name}`;
+    if (!req.files || !req.files.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    const file = req.files.file; // Get the uploaded file
 
-    // Sube el archivo a S3
+    // Check if the case exists
+    const caso = await Caso.findOne({ where: { numero_expediente } });
+
+    if (!caso) {
+      return res.status(404).json({ error: 'Case not found with the provided case number' });
+    }
+
+    // Rename the file to include user_id and case number
+    file.name = `${user_id}_${numero_expediente}_${file.name}`;
+
+    // Upload the file to S3
     const result = await uploadToS3(file);
 
-    // Guarda la URL en la base de datos con el id del usuario biblioteca
+    // Save the file's metadata in the database
     const newFile = await File.create({
-      user_id: BIBLIOTECA_USER_ID,  // Usamos el ID 3 para biblioteca
+      user_id,
       url_del_pdf: result.Location,
+    });
+
+    // Insert the association in the CasoFile join table
+    await CasoFile.create({
+      id_caso: caso.id,
+      id_file: newFile.id
     });
 
     res.status(201).json(newFile);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error uploading file for Biblioteca' });
+    res.status(500).json({ error: 'Error uploading file' });
   }
 });
 
