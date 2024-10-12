@@ -23,4 +23,7 @@ const Abogado = sequelize.define('Abogado', {
   }
 });
 
+// Define the association between Abogado and Usuario
+Abogado.belongsTo(Usuario, { foreignKey: 'id_usuario' });
+
 module.exports = Abogado;
