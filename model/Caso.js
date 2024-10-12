@@ -8,12 +8,8 @@ const Caso = sequelize.define('Caso', {
     autoIncrement: true,
     field: 'ID_Caso'
   },
-  folio: {
-    type: DataTypes.INTEGER,
-    unique: true
-  },
-  numero_expediente: {
-    type: DataTypes.INTEGER,
+  expediente: {
+    type: DataTypes.STRING(10),
     unique: true
   },
   descripcion: DataTypes.TEXT,
