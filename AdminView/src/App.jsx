@@ -4,6 +4,7 @@ import Dashboard from './components/Dashboard';
 import ModifyRole from './components/ModifyRole';
 import ViewFile from './components/ViewFile';
 import Login from './components/Login';
+import Biblioteca from './components/Biblioteca';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -53,6 +54,10 @@ const App = () => {
         <Route
           path="/view-file"
           element={isAuthenticated ? <ViewFile /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/biblioteca"
+          element={isAuthenticated ? <Biblioteca /> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>

@@ -1,0 +1,81 @@
+.biblioteca-layout {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .biblioteca-container {
+    padding: 20px;
+    background-color: #f0f2f5;
+  }
+  
+  .page-title {
+    font-size: 2.5rem;
+    color: #2541B2;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  
+  .biblioteca-files-container {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .section-title {
+    font-size: 1.8rem;
+    color: #2541B2;
+    margin-bottom: 20px;
+  }
+  
+  .file-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .file-item {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .delete-file-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .delete-file-button:hover {
+    background-color: #c82333;
+  }
+  
+  .upload-file-container {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .upload-file-button {
+    background-color: #2541B2;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  

@@ -57,5 +57,20 @@ export const deleteFile = (id) => {
   return api.delete(`/files/delete/${id}`);
 };
 
+// Obtener todos los archivos de la biblioteca
+export const getBibliotecaFiles = () => {
+  return api.get('/files/getBibliotecaFiles');
+};
+
+// Eliminar un archivo de la biblioteca
+export const deleteBibliotecaFile = (fileId) => {
+  return api.delete(`/files/deleteBibliotecaFile/${fileId}`);
+};
+
+// Subir un archivo a la biblioteca
+export const uploadBibliotecaFile = (fileData) => {
+  return api.post('/files/uploadBibliotecaFile', fileData);
+};
+
 
 export default api;
