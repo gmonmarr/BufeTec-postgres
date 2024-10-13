@@ -10,7 +10,8 @@ const Caso = sequelize.define('Caso', {
   },
   numero_expediente: {
     type: DataTypes.STRING(10),
-    unique: true
+    unique: true,
+    field: 'numero_expediente'
   },
   descripcion: DataTypes.TEXT,
   estado: DataTypes.STRING(50),
