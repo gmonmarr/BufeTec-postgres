@@ -23,7 +23,7 @@ const Login = () => {
       // Verificamos el rol del usuario
       const { role } = JSON.parse(atob(token.split('.')[1])); // Decodificar el JWT
   
-      if (role === 'Admin' || role === 'Abogado') {
+      if (role === 'Admin' || role === 'Abogado' || role === 'Alumno') {
         navigate('/');
       } else {
         setErrorMessage('No tienes permiso para acceder.');

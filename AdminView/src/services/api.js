@@ -72,5 +72,15 @@ export const uploadBibliotecaFile = (fileData) => {
   return api.post('/files/uploadBibliotecaFile', fileData);
 };
 
+// Función para obtener los casos del abogado
+export const getCases = () => {
+  return api.get('/casos');
+};
+
+// Función para obtener los archivos de un caso específico
+export const getCaseFiles = (caseId) => {
+  return api.get(`/casos/${caseId}/files`);
+};
+
 
 export default api;

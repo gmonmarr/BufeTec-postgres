@@ -1,91 +1,74 @@
 import React, { useState, useEffect } from 'react';
-import { getUsers, getUserFiles } from '../services/api'; // API para obtener usuarios y archivos
+import { getCases, getCaseFiles } from '../services/api'; // API para obtener casos y archivos
 import NavBar from './NavBar.jsx'; // Importamos la barra de navegación
 import './ViewFile.css'; // Puedes personalizar los estilos
 
 const ViewFiles = () => {
-  const [users, setUsers] = useState([]); // Almacena los usuarios
-  const [filteredUsers, setFilteredUsers] = useState([]); // Almacena los usuarios filtrados por búsqueda
-  const [selectedUserId, setSelectedUserId] = useState(''); // Almacena el ID del usuario seleccionado
-  const [userFiles, setUserFiles] = useState([]); // Almacena los archivos del usuario seleccionado
-  const [message, setMessage] = useState('Selecciona un usuario'); // Mensaje por defecto para la sección de archivos
-  const [searchQuery, setSearchQuery] = useState(''); // Para el filtrado de usuarios
+  const [cases, setCases] = useState([]); // Almacena los casos del abogado
+  const [selectedCaseId, setSelectedCaseId] = useState(''); // Almacena el ID del caso seleccionado
+  const [caseFiles, setCaseFiles] = useState([]); // Almacena los archivos del caso seleccionado
+  const [message, setMessage] = useState('Selecciona un expediente'); // Mensaje por defecto para la sección de archivos
 
-  // Cargar los usuarios al montar el componente
+  // Cargar los casos al montar el componente
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchCases = async () => {
       try {
-        const response = await getUsers(); // Llamamos a la API para obtener los usuarios
-        setUsers(response.data); // Guardamos los usuarios
-        setFilteredUsers(response.data); // Inicialmente mostramos todos los usuarios
+        const response = await getCases(); // Llamamos a la API para obtener los casos
+        setCases(response.data); // Guardamos los casos en el estado
       } catch (error) {
-        setMessage('Error fetching users');
+        setMessage('Error fetching cases');
       }
     };
 
-    fetchUsers();
+    fetchCases();
   }, []);
 
-  // Manejar la selección de un usuario
-  const handleUserSelect = async (id) => {
-    setSelectedUserId(id); // Establece el ID del usuario seleccionado
+  // Manejar la selección de un expediente
+  const handleCaseSelect = async (caseId) => {
+    setSelectedCaseId(caseId); // Establece el ID del expediente seleccionado
     try {
-      const response = await getUserFiles(id); // Obtener archivos del usuario seleccionado
-      setUserFiles(response.data); // Guardar los archivos en el estado
+      const response = await getCaseFiles(caseId); // Obtener archivos del expediente seleccionado
+      setCaseFiles(response.data); // Guardar los archivos en el estado
       setMessage('');
     } catch (error) {
-      setMessage('Error fetching files');
-      setUserFiles([]); // Si falla, limpiamos los archivos
+      setMessage('Error fetching case files');
+      setCaseFiles([]); // Si falla, limpiamos los archivos
     }
-  };
-
-  // Manejar la búsqueda de usuarios
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    const query = e.target.value.toLowerCase();
-    const filtered = users.filter((user) =>
-      user.nombre.toLowerCase().includes(query) || user.email.toLowerCase().includes(query)
-    );
-    setFilteredUsers(filtered);
   };
 
   return (
     <div className="view-files-layout">
       <NavBar />
       <div className="view-files-container">
-        <h1 className="page-title">View User Files</h1>
+        <h1 className="page-title">View Case Files</h1>
         <div className="content-wrapper">
-          {/* Grid de usuarios a la izquierda */}
-          <div className="user-select-container">
-            <h3 className="section-title">Select User</h3>
-            <input
-              type="text"
-              placeholder="Search by name or email"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="search-input"
-            />
-            {filteredUsers.length > 0 ? (
-              <div className="users-grid-wrapper">
-                <table className="users-grid-table">
+          
+          {/* Grid de expedientes a la izquierda */}
+          <div className="case-select-container">
+            <h3 className="section-title">Select Case</h3>
+            {cases.length > 0 ? (
+              <div className="cases-grid-wrapper">
+                <table className="cases-grid-table">
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Name</th>
-                      <th>Email</th>
+                      <th>Expediente</th>
+                      <th>Descripción</th>
+                      <th>Estado</th>
                       <th>Select</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredUsers.map((user) => (
-                      <tr key={user.id}>
-                        <td>{user.id}</td>
-                        <td>{user.nombre}</td>
-                        <td>{user.email}</td>
+                    {cases.map((caseItem) => (
+                      <tr key={caseItem.id}>
+                        <td>{caseItem.id}</td>
+                        <td>{caseItem.expediente}</td>
+                        <td>{caseItem.descripcion}</td>
+                        <td>{caseItem.estado}</td>
                         <td>
                           <button
-                            onClick={() => handleUserSelect(user.id)}
-                            className="select-user-button"
+                            onClick={() => handleCaseSelect(caseItem.id)}
+                            className="select-case-button"
                           >
                             Select
                           </button>
@@ -96,19 +79,19 @@ const ViewFiles = () => {
                 </table>
               </div>
             ) : (
-              <div className="no-users">No users available</div>
+              <div className="no-cases">No cases available</div>
             )}
           </div>
 
-          {/* Archivos del usuario seleccionado a la derecha */}
-          <div className="user-files-container">
-            <h3 className="section-title">User Files</h3>
+          {/* Archivos del caso seleccionado a la derecha */}
+          <div className="case-files-container">
+            <h3 className="section-title">Case Files</h3>
             {message ? (
-              <p>{message}</p> // Mensaje si no hay archivos o no se ha seleccionado un usuario
+              <p>{message}</p> // Mensaje si no hay archivos o no se ha seleccionado un caso
             ) : (
               <ul className="file-list">
-                {userFiles.length > 0 ? (
-                  userFiles.map((file, index) => (
+                {caseFiles.length > 0 ? (
+                  caseFiles.map((file, index) => (
                     <li key={index} className="file-item">
                       <a href={file.presignedUrl} target="_blank" rel="noopener noreferrer">
                         {file.fileName} {/* Aquí mostramos el nombre del archivo */}
@@ -116,7 +99,7 @@ const ViewFiles = () => {
                     </li>
                   ))
                 ) : (
-                  <p>No files available for this user</p>
+                  <p>No files available for this case</p>
                 )}
               </ul>
             )}

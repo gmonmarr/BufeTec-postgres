@@ -4,6 +4,7 @@ const express = require('express');
 const Usuario = require('../model/Usuario');
 const Abogado = require('../model/Abogado');  // Import Abogado model
 const Alumno = require('../model/Alumno');    // Import Alumno model
+const Cliente = require('../model/Cliente'); // Debes asegurarte que esto esté presente
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');             // Import bcrypt for password hashing
 const router = express.Router();
@@ -35,76 +36,99 @@ router.put("/:id", verifyToken(['Admin', 'Abogado', 'Alumno']), async (req, res)
   }
 });
 
-// Update User Role (Only Admin, Abogado, and Alumno)
+
 router.put("/:id/role", verifyToken(['Admin', 'Abogado', 'Alumno']), async (req, res) => {
+  const transaction = await sequelize.transaction(); // Inicia la transacción
   try {
-    const usuario = await Usuario.findByPk(req.params.id);
+    const usuario = await Usuario.findByPk(req.params.id, { transaction });
     const { newRole, direccion, especialidad, experiencia } = req.body;
 
     if (!usuario) {
+      await transaction.rollback(); // Revertir cambios si hay un error
       return res.status(404).json({ message: 'User not found' });
     }
 
     if (!newRole) {
+      await transaction.rollback(); // Revertir si no se pasa el nuevo rol
       return res.status(400).json({ message: 'New role is required' });
     }
 
-    // Check role hierarchy before updating
+    // Verificar la jerarquía de roles antes de actualizar
     const userRole = req.user.role;
     const roleHierarchy = ['Usuario', 'Cliente', 'Alumno', 'Abogado', 'Admin'];
 
     if (roleHierarchy.indexOf(newRole) > roleHierarchy.indexOf(userRole)) {
+      await transaction.rollback(); // Revertir si no tiene permisos para promover
       return res.status(403).json({ message: 'Cannot promote user to a higher role than your own' });
     }
 
     if (newRole === 'Admin' && userRole !== 'Admin') {
+      await transaction.rollback(); // Revertir si no es Admin y trata de promover a Admin
       return res.status(403).json({ message: 'Only Admin can promote to Admin' });
     }
 
-    await usuario.update({ rol: newRole });
+    // Actualizar el rol del usuario
+    await usuario.update({ rol: newRole }, { transaction });
 
-    // Handle role promotions and demotions
+    // Manejar las promociones y degradaciones de rol
     if (newRole === 'Abogado') {
-      const abogadoExists = await Abogado.findOne({ where: { id_usuario: usuario.id } });
+      const abogadoExists = await Abogado.findOne({ where: { id_usuario: usuario.id }, transaction });
       if (!abogadoExists) {
         await Abogado.create({
           id_usuario: usuario.id,
           especialidad: especialidad || null,  // Si no se proporciona, será null
           experiencia: experiencia || null     // Si no se proporciona, será null
-        });
+        }, { transaction });
       }
-      await Cliente.destroy({ where: { id_usuario: usuario.id } });
-      await Alumno.destroy({ where: { id_usuario: usuario.id } });
+      await Cliente.destroy({ where: { id_usuario: usuario.id }, transaction });
+      await Alumno.destroy({ where: { id_usuario: usuario.id }, transaction });
     } else if (newRole === 'Alumno') {
-      const alumnoExists = await Alumno.findOne({ where: { id_usuario: usuario.id } });
+      const alumnoExists = await Alumno.findOne({ where: { id_usuario: usuario.id }, transaction });
       if (!alumnoExists) {
-        await Alumno.create({ id_usuario: usuario.id });
+        await Alumno.create({ id_usuario: usuario.id }, { transaction });
       }
-      await Abogado.destroy({ where: { id_usuario: usuario.id } });
-      await Cliente.destroy({ where: { id_usuario: usuario.id } });
+      await Abogado.destroy({ where: { id_usuario: usuario.id }, transaction });
+      await Cliente.destroy({ where: { id_usuario: usuario.id }, transaction });
     } else if (newRole === 'Cliente') {
-      // Add to Cliente table if not already there, allowing empty direccion
-      const clienteExists = await Cliente.findOne({ where: { id_usuario: usuario.id } });
+      const clienteExists = await Cliente.findOne({ where: { id_usuario: usuario.id }, transaction });
       if (!clienteExists) {
         await Cliente.create({
           id_usuario: usuario.id,
           direccion: direccion || null  // Permitir que sea nulo si no se proporciona
-        });
+        }, { transaction });
       }
-      await Abogado.destroy({ where: { id_usuario: usuario.id } });
-      await Alumno.destroy({ where: { id_usuario: usuario.id } });
+      await Abogado.destroy({ where: { id_usuario: usuario.id }, transaction });
+      await Alumno.destroy({ where: { id_usuario: usuario.id }, transaction });
     } else {
-      await Abogado.destroy({ where: { id_usuario: usuario.id } });
-      await Alumno.destroy({ where: { id_usuario: usuario.id } });
-      await Cliente.destroy({ where: { id_usuario: usuario.id } });
+      await Abogado.destroy({ where: { id_usuario: usuario.id }, transaction });
+      await Alumno.destroy({ where: { id_usuario: usuario.id }, transaction });
+      await Cliente.destroy({ where: { id_usuario: usuario.id }, transaction });
     }
 
+    await transaction.commit(); // Confirmar la transacción si todo salió bien
     res.status(200).json({ message: 'User role updated successfully' });
   } catch (err) {
+    await transaction.rollback(); // Revertir la transacción en caso de error
     res.status(500).json({ error: err.message });
   }
 });
 
+router.delete('/:id', verifyToken(['Admin']), async (req, res) => {
+  try {
+    const usuarioId = req.params.id;
+    const usuario = await Usuario.findByPk(usuarioId);
+
+    if (!usuario) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Eliminar el usuario de la base de datos
+    await usuario.destroy();
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // Register a new Usuario
 router.post("/register", async (req, res) => {
