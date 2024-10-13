@@ -58,7 +58,7 @@ const getPresignedUrl = async (fileUrl) => {
 
   try {
     const command = new GetObjectCommand(params);
-    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // URL expira en 1 hora
+    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 9600 }); // URL expira en 1 hora
     return signedUrl;
   } catch (error) {
     console.error("Error generating presigned URL: ", error);
