@@ -6,6 +6,8 @@ const Caso = require('../model/Caso');
 const Abogado = require('../model/Abogado');
 const Cliente = require('../model/Cliente');
 const Usuario = require('../model/Usuario');
+const File = require('../model/File'); // Asegúrate de que este import esté presente
+
 const verifyToken = require('../middleware/auth'); // Import the existing middleware
 
 // Get all Casos for the Abogado from the token
