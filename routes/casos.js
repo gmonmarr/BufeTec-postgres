@@ -30,6 +30,28 @@ router.get('/abogadoCasos', verifyToken(['Admin', 'Abogado']), async (req, res) 
   }
 });
 
+router.get('/', verifyToken(['Admin', 'Abogado']), async (req, res) => {
+  try {
+    // Obtiene todos los casos de la base de datos
+    const casos = await Caso.findAll();
+
+    // Formatea la respuesta incluyendo los campos necesarios
+    const formattedCasos = casos.map(caso => ({
+      id: caso.id,
+      numero_expediente: caso.numero_expediente,
+      descripcion: caso.descripcion,
+      estado: caso.estado,
+      id_abogado: caso.id_abogado,
+      id_cliente: caso.id_cliente,
+      id_alumno: caso.id_alumno
+    }));
+
+    res.json(formattedCasos); // Envía la respuesta con los casos formateados
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.get('/usuarioCaso', verifyToken(['Cliente']), async (req, res) => {
   try {
     const userId = req.user.userId; // Extract user ID from the token
@@ -107,4 +129,22 @@ router.get('/:id/files', verifyToken(['Cliente', 'Alumno', 'Abogado', 'Admin']),
   }
 });
 
+router.delete('/:id', verifyToken(['Admin', 'Abogado']), async (req, res) => {
+  try {
+    const casoId = req.params.id;
+
+    // Busca el caso por ID
+    const caso = await Caso.findByPk(casoId);
+
+    if (!caso) {
+      return res.status(404).json({ message: 'Caso not found' });
+    }
+
+    // Elimina el caso
+    await caso.destroy();
+    res.status(200).json({ message: 'Caso deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = router;

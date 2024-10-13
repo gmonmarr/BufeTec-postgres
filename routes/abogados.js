@@ -5,6 +5,7 @@ const router = express.Router();
 const Abogado = require('../model/Abogado');
 const verifyToken = require('../middleware/auth');
 const Usuario = require('../model/Usuario');
+const Caso = require("../model/Caso")
 
 // Get all Abogados (Only Admin and Abogado can access)
 router.get('/', verifyToken(['Admin', 'Abogado']), async (req, res) => {
@@ -49,5 +50,42 @@ router.post('/', verifyToken(['Admin', 'Abogado']), async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// Obtener casos por abogado
+router.get('/abogado/:id', verifyToken(['Admin', 'Abogado']), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const casos = await Caso.findAll({ where: { id_abogado: id } });
+    res.status(200).json(casos);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/with-id', verifyToken(['Admin', 'Abogado']), async (req, res) => {
+  try {
+    const abogados = await Abogado.findAll({
+      include: {
+        model: Usuario, // Join with Usuario table
+        attributes: ['nombre', 'email', 'numero_telefono']  // Select specific fields from Usuario
+      }
+    });
+
+    // Formateamos la respuesta incluyendo el ID del abogado
+    const formattedAbogados = abogados.map(abogado => ({
+      id: abogado.id, // Aquí incluimos el ID del abogado
+      especialidad: abogado.especialidad,
+      experiencia: abogado.experiencia,
+      nombre: abogado.Usuario.nombre,
+      email: abogado.Usuario.email,
+      numero_telefono: abogado.Usuario.numero_telefono
+    }));
+
+    res.json(formattedAbogados);  // Enviamos la respuesta con el ID incluido
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 module.exports = router;

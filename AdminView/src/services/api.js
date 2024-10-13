@@ -30,8 +30,12 @@ export const addClient = (clientData) => {
 };
 
 // Función para obtener todos los abogados
-export const getLawyers = () => {
+export const getAbogados = () => {
   return api.get('/abogados');
+};
+
+export const getAbogadosWithId = () => {
+  return api.get('/abogados/with-id');
 };
 
 // Función para obtener todos los clientes
@@ -63,10 +67,14 @@ export const getCases = () => {
 };
 
 // Función para obtener los archivos de un caso específico
+export const getCasesByAbogado = (abogadoId) => {
+  return api.get(`/casos/abogado/${abogadoId}`);
+};
+
+// Función para obtener los archivos de un caso específico
 export const getCaseFiles = (caseId) => {
   return api.get(`/casos/${caseId}/files`);
 };
-
 // Get all files from the Biblioteca
 export const getBibliotecaFiles = () => {
   return api.get('/biblioteca'); // Adjusted to correct route
