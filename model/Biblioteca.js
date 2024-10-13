@@ -11,6 +11,10 @@ const Biblioteca = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    titulo: {  // New column for the title
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     descripcion: {
       type: DataTypes.TEXT,
       allowNull: false,
