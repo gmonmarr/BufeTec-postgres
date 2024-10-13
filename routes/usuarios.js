@@ -179,4 +179,18 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// Verify token validity
+router.get('/verify', verifyToken(), (req, res) => {
+  try {
+    // If the token is valid, `req.user` will contain the decoded user data
+    res.status(200).json({
+      message: 'Token is valid',
+      user: req.user,  // Return the decoded user info
+    });
+  } catch (error) {
+    console.error('Error validating token:', error.message);
+    res.status(500).json({ error: 'Something went wrong during token validation' });
+  }
+});
+
 module.exports = router;
