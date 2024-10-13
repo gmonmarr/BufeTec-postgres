@@ -7,11 +7,12 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'https://bufetec-postgres.onrender.com', // Tu URL de backend
+        target: 'https://bufetec-postgres.onrender.com', // Backend URL
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '') // Reescribe el path si es necesario
-      }
-    }
+        secure: false, // Disable SSL verification if your server uses self-signed certs
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
   },
   plugins: [react()],
 });

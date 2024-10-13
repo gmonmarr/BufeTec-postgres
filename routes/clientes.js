@@ -24,20 +24,4 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
-  try {
-    const clienteId = req.params.id;
-    const cliente = await Cliente.findByPk(clienteId);
-
-    if (!cliente) {
-      return res.status(404).json({ message: 'Cliente not found' });
-    }
-
-    await cliente.destroy();
-    res.status(200).json({ message: 'Cliente deleted successfully' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 module.exports = router;

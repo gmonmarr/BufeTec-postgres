@@ -9,9 +9,15 @@ const sequelize = require("./config/database");
 const app = express();
 const port = process.env.PORT || 3001;
 
+const corsOptions = {
+  origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: ['Authorization', 'Content-Type'],
+  credentials: true,
+};
 // Middleware to parse JSON requests
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(fileUpload());
 
 // Import models to ensure they are registered with Sequelize
