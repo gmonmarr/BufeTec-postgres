@@ -57,21 +57,6 @@ export const deleteFile = (id) => {
   return api.delete(`/files/delete/${id}`);
 };
 
-// Obtener todos los archivos de la biblioteca
-export const getBibliotecaFiles = () => {
-  return api.get('/files/getBibliotecaFiles');
-};
-
-// Eliminar un archivo de la biblioteca
-export const deleteBibliotecaFile = (fileId) => {
-  return api.delete(`/files/deleteBibliotecaFile/${fileId}`);
-};
-
-// Subir un archivo a la biblioteca
-export const uploadBibliotecaFile = (fileData) => {
-  return api.post('/files/uploadBibliotecaFile', fileData);
-};
-
 // Función para obtener los casos del abogado
 export const getCases = () => {
   return api.get('/casos');
@@ -82,5 +67,19 @@ export const getCaseFiles = (caseId) => {
   return api.get(`/casos/${caseId}/files`);
 };
 
+// Get all files from the Biblioteca
+export const getBibliotecaFiles = () => {
+  return api.get('/biblioteca'); // Adjusted to correct route
+};
+
+// Upload a file or link to the Biblioteca
+export const uploadBibliotecaFile = (formData) => {
+  return api.post('/biblioteca/upload', formData); // Adjusted to correct route
+};
+
+// Delete a file from the Biblioteca by ID
+export const deleteBibliotecaFile = (fileId) => {
+  return api.delete(`/biblioteca/delete/${fileId}`); // Adjusted to correct route
+};
 
 export default api;

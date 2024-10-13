@@ -10,30 +10,35 @@ const verifyToken = require('../middleware/auth');
 router.post('/upload', verifyToken(['Admin', 'Abogado', 'Alumno']), async (req, res) => {
   try {
     const user_id = req.user.id;
-    const { titulo, descripcion } = req.body;
+    const { titulo, descripcion, link } = req.body;
 
-    if (!req.files || !req.files.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
+    let url_del_pdf = '';
+
+    if (link) {
+      url_del_pdf = link; // Guardamos el link si se proporciona
+    } else if (req.files && req.files.file) {
+      const file = req.files.file;
+      file.name = `${user_id}_${file.name}`;
+      const result = await uploadToS3(file);
+      url_del_pdf = result.Location; // Guardamos la URL del archivo en S3
+    } else {
+      return res.status(400).json({ error: 'No file or link provided' });
     }
 
-    const file = req.files.file;
-    file.name = `${user_id}_${file.name}`;
-
-    const result = await uploadToS3(file);
-
-    const newFile = await Biblioteca.create({
+    const newEntry = await Biblioteca.create({
       user_id,
       titulo,
       descripcion,
-      url_del_pdf: result.Location,
+      url_del_pdf,
     });
 
-    res.status(201).json(newFile);
+    res.status(201).json(newEntry);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error uploading file to Biblioteca' });
+    res.status(500).json({ error: 'Error uploading to Biblioteca' });
   }
 });
+
 
 // Delete a file from Biblioteca
 router.delete('/delete/:id', verifyToken(['Admin', 'Abogado', 'Alumno']), async (req, res) => {

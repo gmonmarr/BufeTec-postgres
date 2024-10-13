@@ -58,6 +58,9 @@ const ModifyRole = () => {
     try {
       await modifyUserRole(selectedUserId, data);
       setMessage('User role updated successfully');
+      const response = await getUsers();
+      setUsers(response.data);
+      setFilteredUsers(response.data); 
     } catch (error) {
       setMessage('Error updating user role');
     }

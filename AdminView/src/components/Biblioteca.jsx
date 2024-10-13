@@ -1,62 +1,82 @@
 import React, { useState, useEffect } from 'react';
-import { getBibliotecaFiles, deleteBibliotecaFile, uploadBibliotecaFile } from '../services/api'; // API para obtener, eliminar y subir archivos
-import NavBar from './NavBar.jsx'; // Importamos la barra de navegación
-import './Biblioteca.css'; // Estilos personalizados
+import { getBibliotecaFiles, deleteBibliotecaFile, uploadBibliotecaFile } from '../services/api';
+import NavBar from './NavBar.jsx';
+import './Biblioteca.css';
 
 const Biblioteca = () => {
-  const [bibliotecaFiles, setBibliotecaFiles] = useState([]); // Almacena los archivos de la biblioteca
-  const [message, setMessage] = useState(''); // Mensaje para el estado de operaciones (exitoso/error)
-  const [fileToUpload, setFileToUpload] = useState(null); // Almacena el archivo que se subirá
+  const [bibliotecaFiles, setBibliotecaFiles] = useState([]);
+  const [message, setMessage] = useState('');
+  const [fileToUpload, setFileToUpload] = useState(null);
+  const [linkToUpload, setLinkToUpload] = useState('');
+  const [uploadType, setUploadType] = useState('file'); // Dropdown control for selecting file or link
+  const [titulo, setTitulo] = useState('');
+  const [descripcion, setDescripcion] = useState('');
 
-  // Función para cargar los archivos de la biblioteca
   const fetchBibliotecaFiles = async () => {
     try {
-      const response = await getBibliotecaFiles(); // Llamamos a la API para obtener los archivos
-      setBibliotecaFiles(response.data); // Guardamos los archivos en el estado
-      setMessage(''); // Limpiamos cualquier mensaje previo
+      const response = await getBibliotecaFiles();
+      setBibliotecaFiles(response.data);
+      setMessage('');
     } catch (error) {
       setMessage('Error fetching biblioteca files');
     }
   };
 
-  // Cargar los archivos de la biblioteca al montar el componente
   useEffect(() => {
     fetchBibliotecaFiles();
   }, []);
 
-  // Manejar la eliminación de un archivo
   const handleDelete = async (fileId) => {
     try {
-      await deleteBibliotecaFile(fileId); // Llamamos a la API para eliminar el archivo
+      await deleteBibliotecaFile(fileId);
       setMessage('File deleted successfully');
-      setBibliotecaFiles((prevFiles) => prevFiles.filter((file) => file.id !== fileId)); // Actualizamos la lista de archivos
+      setBibliotecaFiles((prevFiles) => prevFiles.filter((file) => file.id !== fileId));
     } catch (error) {
       setMessage('Error deleting file');
     }
   };
 
-  // Manejar la selección de archivo para subir
   const handleFileChange = (e) => {
-    setFileToUpload(e.target.files[0]); // Guardamos el archivo seleccionado
+    setFileToUpload(e.target.files[0]);
+    setLinkToUpload('');
   };
 
-  // Manejar la subida del archivo
+  const handleLinkChange = (e) => {
+    setLinkToUpload(e.target.value);
+    setFileToUpload(null);
+  };
+
   const handleUpload = async () => {
-    if (!fileToUpload) {
-      setMessage('Please select a file to upload');
+    if ((uploadType === 'file' && !fileToUpload) || (uploadType === 'link' && !linkToUpload)) {
+      setMessage('Please select a file or enter a link to upload');
+      return;
+    }
+
+    if (!titulo || !descripcion) {
+      setMessage('Please provide a title and description');
       return;
     }
 
     const formData = new FormData();
-    formData.append('file', fileToUpload); // Añadimos el archivo al formData
+    formData.append('titulo', titulo);
+    formData.append('descripcion', descripcion);
+
+    if (uploadType === 'link') {
+      formData.append('link', linkToUpload);
+    } else {
+      formData.append('file', fileToUpload);
+    }
 
     try {
-      await uploadBibliotecaFile(formData); // Llamamos a la API para subir el archivo
-      setMessage('File uploaded successfully');
-      setFileToUpload(null); // Limpiamos el archivo seleccionado
-      fetchBibliotecaFiles(); // Refrescamos el grid para mostrar el archivo recién subido
+      await uploadBibliotecaFile(formData);
+      setMessage('Upload successful');
+      setFileToUpload(null);
+      setLinkToUpload('');
+      setTitulo('');
+      setDescripcion('');
+      fetchBibliotecaFiles();
     } catch (error) {
-      setMessage('Error uploading file');
+      setMessage('Error uploading');
     }
   };
 
@@ -64,13 +84,12 @@ const Biblioteca = () => {
     <div className="biblioteca-layout">
       <NavBar />
       <div className="biblioteca-container">
-        <h1 className="page-title">Biblioteca Files</h1>
+        <h1 className="page-title">Biblioteca</h1>
         <div className="content-wrapper">
-          {/* Grid de archivos */}
           <div className="biblioteca-files-container">
             <h3 className="section-title">All Files in Biblioteca</h3>
             {message && (
-              <div className={`confirmation-banner ${message.includes('successfully') ? 'success' : 'error'}`}>
+              <div className={`confirmation-banner ${message.includes('successful') ? 'success' : 'error'}`}>
                 {message}
               </div>
             )}
@@ -94,12 +113,49 @@ const Biblioteca = () => {
             )}
           </div>
 
-          {/* Sección para subir archivos */}
+          {/* Upload Section with Dropdown */}
           <div className="upload-file-container">
-            <h3 className="section-title">Upload New File</h3>
-            <input type="file" onChange={handleFileChange} />
+            <h3 className="section-title">Upload New File or Link</h3>
+
+            <input
+              type="text"
+              placeholder="Enter title"
+              value={titulo}
+              onChange={(e) => setTitulo(e.target.value)}
+              className="upload-title-input"
+            />
+            <textarea
+              placeholder="Enter description"
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+              className="upload-description-input"
+            />
+
+            {/* Dropdown to select file or link */}
+            <select
+              value={uploadType}
+              onChange={(e) => setUploadType(e.target.value)}
+              className="upload-type-dropdown"
+            >
+              <option value="file">File</option>
+              <option value="link">Link</option>
+            </select>
+
+            {/* Conditional rendering based on selection */}
+            {uploadType === 'file' ? (
+              <input type="file" onChange={handleFileChange} />
+            ) : (
+              <input
+                type="text"
+                placeholder="Enter a link"
+                value={linkToUpload}
+                onChange={handleLinkChange}
+                className="upload-link-input"
+              />
+            )}
+
             <button onClick={handleUpload} className="upload-file-button">
-              Upload File
+              Upload
             </button>
           </div>
         </div>
