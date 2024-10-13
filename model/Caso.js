@@ -8,7 +8,7 @@ const Caso = sequelize.define('Caso', {
     autoIncrement: true,
     field: 'ID_Caso'
   },
-  expediente: {
+  numero_expediente: {
     type: DataTypes.STRING(10),
     unique: true
   },

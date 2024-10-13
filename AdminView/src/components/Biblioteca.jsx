@@ -8,7 +8,7 @@ const Biblioteca = () => {
   const [message, setMessage] = useState('');
   const [fileToUpload, setFileToUpload] = useState(null);
   const [linkToUpload, setLinkToUpload] = useState('');
-  const [uploadType, setUploadType] = useState('file'); // Dropdown control for selecting file or link
+  const [uploadType, setUploadType] = useState('file'); 
   const [titulo, setTitulo] = useState('');
   const [descripcion, setDescripcion] = useState('');
 

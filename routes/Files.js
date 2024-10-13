@@ -1,50 +1,67 @@
 const express = require('express');
 const { uploadToS3, deleteFromS3, getPresignedUrl } = require('../services/s3Service');
 const File = require('../model/File');
+const Caso = require('../model/Caso');
+const CasoFile = require('../model/CasoFile');
 const verifyToken = require('../middleware/auth');  // Verificamos el token
 const router = express.Router();
 
 router.post('/upload', verifyToken(['Admin', 'Abogado', 'Cliente', 'Alumno']), async (req, res) => {
   try {
+    console.log('POST /upload called'); // Log when the route is hit
+
     const user_id = req.user.id; // Get the user ID from the token
+    console.log(`User ID from token: ${user_id}`);
+
     const { numero_expediente } = req.body; // Get the case number from the request body
+    console.log(`Case number from body: ${numero_expediente}`);
 
     if (!req.files || !req.files.file) {
+      console.log('No file uploaded');
       return res.status(400).json({ error: 'No file uploaded' });
     }
+    
     const file = req.files.file; // Get the uploaded file
+    console.log(`File received: ${file.name}`);
 
     // Check if the case exists
     const caso = await Caso.findOne({ where: { numero_expediente } });
+    console.log(`Case found: ${caso ? 'Yes' : 'No'}`);
 
     if (!caso) {
+      console.log('Case not found');
       return res.status(404).json({ error: 'Case not found with the provided case number' });
     }
 
     // Rename the file to include user_id and case number
     file.name = `${user_id}_${numero_expediente}_${file.name}`;
+    console.log(`Renamed file: ${file.name}`);
 
     // Upload the file to S3
     const result = await uploadToS3(file);
+    console.log('File uploaded to S3:', result);
 
     // Save the file's metadata in the database
     const newFile = await File.create({
       user_id,
       url_del_pdf: result.Location,
     });
+    console.log('File metadata saved in DB:', newFile);
 
     // Insert the association in the CasoFile join table
     await CasoFile.create({
       id_caso: caso.id,
       id_file: newFile.id
     });
+    console.log('File associated with case in CasoFile');
 
     res.status(201).json(newFile);
   } catch (error) {
-    console.error(error);
+    console.error('Error occurred:', error);
     res.status(500).json({ error: 'Error uploading file' });
   }
 });
+
 
 // Ruta para eliminar un archivo (solo usuarios autenticados pueden eliminar archivos)
 router.delete('/delete/:id', verifyToken(['Admin', 'Abogado']), async (req, res) => {
