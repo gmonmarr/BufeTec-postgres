@@ -4,10 +4,11 @@ const express = require('express');
 const router = express.Router();
 const Caso = require('../model/Caso');
 const Abogado = require('../model/Abogado');
+const Cliente = require('../model/Cliente');
 const verifyToken = require('../middleware/auth'); // Import the existing middleware
 
 // Get all Casos for the Abogado from the token
-router.get('/', verifyToken(['Admin', 'Abogado']), async (req, res) => {
+router.get('/abogadoCasos', verifyToken(['Admin', 'Abogado']), async (req, res) => {
   try {
     const abogadoUerId = req.user.id; // Extract the Abogado ID from the verified JWT token
 
@@ -26,6 +27,34 @@ router.get('/', verifyToken(['Admin', 'Abogado']), async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/usuarioCaso', verifyToken(['Cliente']), async (req, res) => {
+  try {
+    const userId = req.user.userId; // Extract user ID from the token
+
+    // Find the Cliente based on the user ID
+    const cliente = await Cliente.findOne({ where: { id_usuario: userId } });
+
+    if (!cliente) {
+      return res.status(404).json({ message: 'Cliente not found' });
+    }
+
+    // Find all cases that belong to the Cliente
+    const casos = await Caso.findAll({
+      where: { id_cliente: cliente.id }
+    });
+
+    if (casos.length === 0) {
+      return res.status(404).json({ message: 'No cases found for this Cliente' });
+    }
+
+    // Return the list of cases
+    res.status(200).json(casos);
+  } catch (err) {
+    console.error('Error fetching cases for Cliente:', err.message);
+    res.status(500).json({ error: 'Error fetching cases' });
   }
 });
 
