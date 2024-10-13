@@ -94,20 +94,21 @@ const Biblioteca = () => {
               </div>
             )}
             {bibliotecaFiles.length > 0 ? (
-              <ul className="file-list">
+              <div className="file-grid">
                 {bibliotecaFiles.map((file, index) => (
-                  <li key={index} className="file-item">
-                    <div className="file-info">
+                  <div key={index} className="file-item">
+                    <div className="file-details">
                       <a href={file.presignedUrl} target="_blank" rel="noopener noreferrer" className="file-name">
-                        {file.fileName}
+                        {file.titulo}
                       </a>
-                      <button onClick={() => handleDelete(file.id)} className="delete-file-button">
-                        Delete
-                      </button>
+                      <p className="file-description">{file.descripcion}</p>
                     </div>
-                  </li>
+                    <button onClick={() => handleDelete(file.id)} className="delete-file-button">
+                      Delete
+                    </button>
+                  </div>
                 ))}
-              </ul>
+              </div>
             ) : (
               <p>No files available in Biblioteca</p>
             )}
