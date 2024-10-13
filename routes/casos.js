@@ -133,17 +133,6 @@ router.get('/:id/files', verifyToken(['Cliente', 'Alumno', 'Abogado', 'Admin']),
       return res.status(404).json({ message: 'Case not found' });
     }
 
-    // Check if the user is associated with the case
-    const hasAccess = 
-      (userRole === 'Cliente' && caso.id_cliente === userId) ||
-      (userRole === 'Abogado' && caso.id_abogado === userId) ||
-      (userRole === 'Alumno' && caso.id_alumno === userId) ||
-      userRole === 'Admin';
-
-    if (!hasAccess) {
-      return res.status(403).json({ message: 'Access denied' });
-    }
-
     // If user has access, return the files associated with the case
     const files = caso.Files;
     res.json(files);
