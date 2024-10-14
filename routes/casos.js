@@ -202,13 +202,32 @@ router.get('/:id/files', verifyToken(['Cliente', 'Alumno', 'Abogado', 'Admin']),
       return res.status(403).json({ message: 'Access denied' });
     }
 
-    // If user has access, return the files associated with the case
-    const files = caso.Files;
+    // Map files to the desired format
+    const files = caso.Files.map(file => ({
+      titulo: extractTitle(file.url_del_pdf),  // Custom function to extract title
+      descripcion: `Descripción del archivo: ${extractDescription(file.url_del_pdf)}`, // Example description extraction
+      presignedUrl: file.url_del_pdf
+    }));
+
+    // Return the formatted files
     res.json(files);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
+// Example function to extract title from the PDF URL
+function extractTitle(url) {
+  const decodedUrl = decodeURIComponent(url);
+  const matches = decodedUrl.match(/\/([^\/]+)\.pdf/); // Extract the file name
+  return matches ? matches[1].replace(/_/g, ' ') : 'Archivo sin título';
+}
+
+// Example function to generate a sample description
+function extractDescription(url) {
+  const title = extractTitle(url);
+  return `"${title}" es un aporte relacionado con el caso.`;
+}
 
 // Route to get files for a specific case based on ID_Caso
 router.get('/:id/files/admin', verifyToken(['Cliente', 'Alumno', 'Abogado', 'Admin']), async (req, res) => {
