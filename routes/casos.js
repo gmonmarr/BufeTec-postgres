@@ -14,23 +14,50 @@ const verifyToken = require('../middleware/auth'); // Import the existing middle
 // Get all Casos for the Abogado from the token
 router.get('/abogadoCasos', verifyToken(['Admin', 'Abogado']), async (req, res) => {
   try {
-    const abogadoUserId = req.user.id; // Extract the Abogado ID from the verified JWT token
+    const abogadoUserId = req.user.id; // Extract user ID from token
 
-    const abogadoId = await Abogado.findOne({ where: { id_usuario: abogadoUserId } });
-    
-    if (req.user.role === 'Abogado') {
-      // Return only cases that belong to the Abogado
-      const casos = await Caso.findAll({
-        where: { id_abogado: abogadoId.id }
-      });
-      res.json(casos);
-    } else {
-      // If the user is Admin, return all cases
-      const casos = await Caso.findAll();
-      res.json(casos);
+    // Find the Abogado based on the user ID
+    const abogado = await Abogado.findOne({ where: { id_usuario: abogadoUserId } });
+
+    if (!abogado) {
+      return res.status(404).json({ message: 'Abogado not found' });
     }
+
+    // Fetch all cases assigned to the Abogado
+    const casos = await Caso.findAll({
+      where: { id_abogado: abogado.id },
+      attributes: ['id', 'numero_expediente', 'descripcion', 'estado', 'id_cliente'], // Select required fields
+    });
+
+    if (casos.length === 0) {
+      return res.status(404).json({ message: 'No cases found for this Abogado' });
+    }
+
+    // Map through the cases and fetch the clienteName for each case
+    const casosWithClienteName = await Promise.all(
+      casos.map(async (caso) => {
+        const cliente = await Cliente.findOne({ where: { id: caso.id_cliente } });
+
+        if (!cliente) {
+          return { ...caso.get(), clienteName: 'Unknown' }; // Handle missing Cliente
+        }
+
+        const usuario = await Usuario.findOne({ where: { id: cliente.id_usuario } });
+
+        return {
+          id: caso.id,
+          numero_expediente: caso.numero_expediente,
+          descripcion: caso.descripcion,
+          estado: caso.estado,
+          clienteName: usuario ? usuario.nombre : 'Unknown',
+        };
+      })
+    );
+
+    res.status(200).json(casosWithClienteName);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error fetching cases for Abogado:', err.message);
+    res.status(500).json({ error: 'Error fetching cases' });
   }
 });
 
