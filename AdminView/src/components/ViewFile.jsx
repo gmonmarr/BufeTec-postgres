@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAbogadosWithId, getCasesByAbogado, getCaseFiles} from '../services/api'; // API para obtener abogados, casos y archivos
+import { getAbogadosWithId, getCasesByAbogado, getCaseFiles } from '../services/api'; // API para obtener abogados, casos y archivos
 import NavBar from './NavBar.jsx'; // Importamos la barra de navegación
 import './ViewFile.css'; // Puedes personalizar los estilos
 
@@ -127,7 +127,7 @@ const ViewFiles = () => {
                   caseFiles.map((file, index) => (
                     <li key={index} className="file-item">
                       <a href={file.presignedUrl} target="_blank" rel="noopener noreferrer">
-                        {file.fileName} {/* Aquí mostramos el nombre del archivo */}
+                        {file.fileName} {/* Mostrar el nombre del archivo */} 
                       </a>
                     </li>
                   ))
@@ -144,4 +144,3 @@ const ViewFiles = () => {
 };
 
 export default ViewFiles;
-

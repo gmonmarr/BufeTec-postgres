@@ -67,7 +67,7 @@ export const getCases = () => {
 
 // Función para obtener los archivos de un caso específico
 export const getCaseFiles = (caseId) => {
-  return api.get(`/casos/${caseId}/files`);
+  return api.get(`/casos/${caseId}/files/admin`);
 };
 
 export const getAbogadosWithId = () => {
