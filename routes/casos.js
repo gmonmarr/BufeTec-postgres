@@ -5,6 +5,8 @@ const router = express.Router();
 const Caso = require('../model/Caso');
 const Abogado = require('../model/Abogado');
 const Cliente = require('../model/Cliente');
+const Alumno = require('../model/Alumno');
+const Admin = require('../model/Admin');
 const Usuario = require('../model/Usuario');
 const {getPresignedUrl } = require('../services/s3Service');
 const File = require('../model/File'); // Asegúrate de que este import esté presente
@@ -148,12 +150,40 @@ router.get('/:id/files', verifyToken(['Cliente', 'Alumno', 'Abogado', 'Admin']),
     const userId = req.user.id;  // Extract the user ID from the token
     const userRole = req.user.role;  // Extract the user role from the token
 
-    // Find the case by ID
+    let roleId = null;
+
+    // Fetch the appropriate role-based ID from the database
+    switch (userRole) {
+      case 'Abogado':
+        const abogado = await Abogado.findOne({ where: { id_usuario: userId } });
+        if (abogado) roleId = abogado.id;
+        break;
+      case 'Cliente':
+        const cliente = await Cliente.findOne({ where: { id_usuario: userId } });
+        if (cliente) roleId = cliente.id;
+        break;
+      case 'Alumno':
+        const alumno = await Alumno.findOne({ where: { id_usuario: userId } });
+        if (alumno) roleId = alumno.id;
+        break;
+      case 'Admin':
+        const admin = await Admin.findOne({ where: { id_usuario: userId } });
+        if (admin) roleId = admin.id;
+        break;
+      default:
+        return res.status(403).json({ message: 'Invalid user role' });
+    }
+
+    if (!roleId) {
+      return res.status(403).json({ message: 'User role ID not found' });
+    }
+
+    // Find the case by ID and include associated Files
     const caso = await Caso.findOne({
       where: { id: casoId },
       include: {
-        model: File,  // Include associated Files
-        through: { attributes: [] }  // Avoid extra attributes from join table
+        model: File,
+        through: { attributes: [] } // Avoid extra attributes from join table
       }
     });
 
@@ -162,11 +192,11 @@ router.get('/:id/files', verifyToken(['Cliente', 'Alumno', 'Abogado', 'Admin']),
     }
 
     // Check if the user is associated with the case
-    const hasAccess = 
-      (userRole === 'Cliente' && caso.id_cliente === userId) ||
-      (userRole === 'Abogado' && caso.id_abogado === userId) ||
-      (userRole === 'Alumno' && caso.id_alumno === userId) ||
-      userRole === 'Admin';
+    const hasAccess =
+      (userRole === 'Cliente' && caso.id_cliente === roleId) ||
+      (userRole === 'Abogado' && caso.id_abogado === roleId) ||
+      (userRole === 'Alumno' && caso.id_alumno === roleId) ||
+      userRole === 'Admin'; // Admin has access to all cases
 
     if (!hasAccess) {
       return res.status(403).json({ message: 'Access denied' });
