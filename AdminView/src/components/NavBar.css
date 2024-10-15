@@ -1,37 +1,76 @@
 /* Estilo de la barra de navegación */
 .navbar {
   width: 100%;
-  background-color: #131313;
+  background-color: #1c1c1e;
   display: flex;
-  justify-content: space-around; /* Distribuye los botones de manera equitativa */
+  justify-content: space-around;
   align-items: center;
-  padding: 1px 0; /* Añade algo de espacio vertical */
+  padding: 15px 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Añade una sombra suave */
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000; /* Asegura que la navbar esté siempre por encima del contenido */
+  z-index: 1000;
+  font-family: 'Poppins', sans-serif; /* Fuente moderna */
+  transition: background-color 0.3s ease;
 }
 
 /* Estilo de los botones de navegación */
 .nav-button {
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   background: none;
   border: none;
   cursor: pointer;
   padding: 10px 20px;
-  transition: background-color 0.3s;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  border-radius: 5px;
+  font-weight: 500;
+  text-transform: uppercase; /* Convierte el texto a mayúsculas */
+  letter-spacing: 0.5px; /* Añade un poco de espaciado entre letras */
 }
 
 .nav-button:hover {
-  background-color: rgba(255, 255, 255, 0.2); /* Cambia el fondo cuando se pasa el ratón */
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #f0f0f0;
 }
 
+/* Botón de Logout con estilo diferenciado */
 .logout {
-  font-weight: bold; /* Hace que el botón de logout sea más llamativo */
-  color: #ff4d4d; /* Color rojo para el botón de logout */
+  font-weight: bold;
+  color: #ff4d4d;
+  padding: 10px 25px;
+  border: 2px solid #ff4d4d;
+  border-radius: 30px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .logout:hover {
-  background-color: rgba(255, 0, 0, 0.2); /* Cambia el fondo en hover */
+  background-color: #ff4d4d;
+  color: white;
+}
+
+/* Efecto de sombra y transición de color al hacer scroll */
+.navbar.scrolled {
+  background-color: #141414;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para dispositivos móviles */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 10px 0;
+  }
+
+  .nav-button {
+    padding: 10px 15px;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .logout {
+    padding: 10px 20px;
+    margin-top: 10px;
+  }
 }
