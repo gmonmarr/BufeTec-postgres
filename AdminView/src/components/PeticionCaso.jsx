@@ -7,8 +7,8 @@ const PeticionCasoGrid = () => {
   const [peticiones, setPeticiones] = useState([]); // Almacena las peticiones de casos
   const [abogados, setAbogados] = useState([]); // Almacena los abogados
   const [selectedAbogadoId, setSelectedAbogadoId] = useState(''); // Abogado seleccionado
-  const [selectedPeticionId, setSelectedPeticionId] = useState(null); // Petición seleccionada
   const [message, setMessage] = useState(''); // Mensaje de estado
+  const [messageType, setMessageType] = useState(''); // Tipo de mensaje ('success' o 'error')
 
   // Cargar las peticiones al montar el componente
   useEffect(() => {
@@ -18,6 +18,7 @@ const PeticionCasoGrid = () => {
         setPeticiones(response.data); // Guardamos las peticiones en el estado
       } catch (error) {
         setMessage('Error fetching petitions');
+        setMessageType('error');
       }
     };
 
@@ -27,6 +28,7 @@ const PeticionCasoGrid = () => {
         setAbogados(response.data); // Guardamos los abogados en el estado
       } catch (error) {
         setMessage('Error fetching abogados');
+        setMessageType('error');
       }
     };
 
@@ -43,12 +45,14 @@ const PeticionCasoGrid = () => {
   const handleUpdateEstado = async (peticionId, newEstado) => {
     if (!selectedAbogadoId) {
       setMessage('Selecciona un abogado antes de aceptar una petición');
+      setMessageType('error');
       return;
     }
 
     try {
       const response = await updatePeticionCaso(peticionId, { estado: newEstado, id_abogado: selectedAbogadoId }); // Llamada PUT
       setMessage('Petición actualizada correctamente');
+      setMessageType('success');
       
       // Actualizamos el estado de las peticiones después de la actualización
       setPeticiones((prevPeticiones) =>
@@ -58,6 +62,7 @@ const PeticionCasoGrid = () => {
       );
     } catch (error) {
       setMessage('Error actualizando la petición');
+      setMessageType('error');
     }
   };
 
@@ -85,7 +90,11 @@ const PeticionCasoGrid = () => {
         </div>
 
         {/* Mensaje de estado */}
-        {message && <p className="status-message">{message}</p>}
+        {message && (
+          <p className={messageType === 'success' ? 'success-message' : 'status-message'}>
+            {message}
+          </p>
+        )}
 
         {/* Grid de peticiones de casos */}
         {peticiones.length > 0 ? (

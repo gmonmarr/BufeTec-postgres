@@ -77,7 +77,7 @@ router.put('/:id', verifyToken(['Alumno', 'Abogado', 'Admin']), async (req, res)
     peticion.estado = estado;
     await peticion.save();
 
-    // Si el estado es "En proceso", crear un cliente y un caso
+    // Si el estado es "Aceptado", crear un cliente y un caso
     if (estado === 'Aceptado') {
       // Verificar que se haya enviado el id_abogado
       if (!id_abogado) {
@@ -89,6 +89,13 @@ router.put('/:id', verifyToken(['Alumno', 'Abogado', 'Admin']), async (req, res)
         id_usuario: peticion.id_user,  // Asociamos el cliente al usuario que hizo la petición
         direccion: null // Direccion no provista
       });
+
+      // Actualizar el rol del usuario a "Cliente"
+      const usuario = await Usuario.findByPk(peticion.id_user);
+      if (usuario) {
+        usuario.rol = 'Cliente';
+        await usuario.save();
+      }
 
       // Generar el número de expediente disponible
       const lastCaso = await Caso.findOne({
@@ -103,16 +110,17 @@ router.put('/:id', verifyToken(['Alumno', 'Abogado', 'Admin']), async (req, res)
       const nuevoCaso = await Caso.create({
         numero_expediente: nuevoNumeroExpediente,
         descripcion: peticion.descripcion,  // Usamos la descripción de la petición
-        estado: 'En proceso',
+        estado: 'Aceptado',
         id_abogado,  // Asignamos el abogado pasado en el cuerpo
         id_cliente: cliente.id  // Asociamos el caso al cliente recién creado
       });
 
       return res.json({
-        message: 'Petition updated and case created successfully',
+        message: 'Petition updated, role changed, and case created successfully',
         peticion,
         cliente,
-        nuevoCaso
+        nuevoCaso,
+        usuario // Devolvemos el usuario actualizado con el nuevo rol
       });
     }
 
