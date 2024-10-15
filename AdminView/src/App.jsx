@@ -5,6 +5,7 @@ import ModifyRole from './components/ModifyRole';
 import ViewFile from './components/ViewFile';
 import Login from './components/Login';
 import Biblioteca from './components/Biblioteca';
+import PeticionCasoGrid from './components/PeticionCaso';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -58,6 +59,10 @@ const App = () => {
         <Route
           path="/biblioteca"
           element={isAuthenticated ? <Biblioteca /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/peticion-caso"
+          element={isAuthenticated ? <PeticionCasoGrid /> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>

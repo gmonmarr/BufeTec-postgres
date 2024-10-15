@@ -2,7 +2,7 @@
 
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Usuario = require('./Usuario'); // Asegúrate de tener un modelo Usuario definido
+const Usuario = require('./Usuario'); // Asegúrate de tener el modelo Usuario definido
 
 const PeticionCaso = sequelize.define('PeticionCaso', {
   id: {
@@ -31,5 +31,8 @@ const PeticionCaso = sequelize.define('PeticionCaso', {
   tableName: 'PeticionesCasos', // Nombre personalizado de la tabla
   timestamps: true // createdAt y updatedAt
 });
+
+// Definimos la relación belongsTo
+PeticionCaso.belongsTo(Usuario, { foreignKey: 'id_user' }); // Un PeticionCaso pertenece a un Usuario
 
 module.exports = PeticionCaso;

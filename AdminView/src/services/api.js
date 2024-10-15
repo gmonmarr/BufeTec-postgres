@@ -94,4 +94,14 @@ export const deleteBibliotecaFile = (fileId) => {
   return api.delete(`/biblioteca/delete/${fileId}`); // Adjusted to correct route
 };
 
+// Get all peticiones with user info
+export const getPeticionCasos = () => {
+  return api.get('/peticionCaso');
+};
+
+// Update the estado of a petition and assign an abogado
+export const updatePeticionCaso = (peticionId, updateData) => {
+  return api.put(`/peticionCaso/${peticionId}`, updateData);
+};
+
 export default api;

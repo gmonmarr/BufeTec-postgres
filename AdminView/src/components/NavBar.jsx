@@ -16,6 +16,7 @@ const NavBar = () => {
       <button className="nav-button" onClick={() => navigate('/view-file')}>View File</button>
       <button className="nav-button" onClick={() => navigate('/change-user-role')}>Change Role</button>
       <button className="nav-button" onClick={() => navigate('/biblioteca')}>Biblioteca</button>
+      <button className="nav-button" onClick={() => navigate('/peticion-caso')}>Peticiones Casos</button>
       <button className="nav-button logout" onClick={handleLogout}>Logout</button>
     </div>
   );
