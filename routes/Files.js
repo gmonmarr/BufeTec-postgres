@@ -3,6 +3,7 @@ const { uploadToS3, deleteFromS3, getPresignedUrl } = require('../services/s3Ser
 const File = require('../model/File');
 const Caso = require('../model/Caso');
 const CasoFile = require('../model/CasoFile');
+const Abogado = require('../model/Abogado');  // Asegúrate de que el path sea el correcto
 const verifyToken = require('../middleware/auth');  // Verificamos el token
 const router = express.Router();
 
@@ -35,6 +36,70 @@ router.post('/upload', verifyToken(['Admin', 'Abogado', 'Cliente', 'Alumno']), a
 
     // Rename the file to include user_id and case number
     file.name = `${user_id}_${numero_expediente}_${file.name}`;
+    console.log(`Renamed file: ${file.name}`);
+
+    // Upload the file to S3
+    const result = await uploadToS3(file);
+    console.log('File uploaded to S3:', result);
+
+    // Save the file's metadata in the database
+    const newFile = await File.create({
+      user_id,
+      url_del_pdf: result.Location,
+    });
+    console.log('File metadata saved in DB:', newFile);
+
+    // Insert the association in the CasoFile join table
+    await CasoFile.create({
+      id_caso: caso.id,
+      id_file: newFile.id
+    });
+    console.log('File associated with case in CasoFile');
+
+    res.status(201).json(newFile);
+  } catch (error) {
+    console.error('Error occurred:', error);
+    res.status(500).json({ error: 'Error uploading file' });
+  }
+});
+
+router.post('/upload-abogado', verifyToken(['Admin', 'Abogado', 'Alumno']), async (req, res) => {
+  try {
+    console.log('POST /upload-abogado called'); // Log when the route is hit
+
+    const user_id = req.user.id; // Get the user ID from the token
+    console.log(`User ID from token: ${user_id}`);
+
+    const { numero_expediente, id_abogado } = req.body; // Get the case number and abogado ID from the request body
+    console.log(`Case number from body: ${numero_expediente}`);
+    console.log(`Abogado ID from body: ${id_abogado}`);
+
+    if (!req.files || !req.files.file) {
+      console.log('No file uploaded');
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    
+    const file = req.files.file; // Get the uploaded file
+    console.log(`File received: ${file.name}`);
+
+    // Check if the case exists
+    const caso = await Caso.findOne({ where: { numero_expediente } });
+    console.log(`Case found: ${caso ? 'Yes' : 'No'}`);
+
+    if (!caso) {
+      console.log('Case not found');
+      return res.status(404).json({ error: 'Case not found with the provided case number' });
+    }
+
+    // Verify that the provided abogado ID matches a valid Abogado
+    const abogado = await Abogado.findOne({ where: { id: id_abogado } });
+    if (!abogado) {
+      console.log('Abogado not found');
+      return res.status(404).json({ error: 'Abogado not found with the provided ID' });
+    }
+
+    // Rename the file to include user_id, abogado_id, and case number
+    file.name = `${user_id}_${id_abogado}_${numero_expediente}_${file.name}`;
     console.log(`Renamed file: ${file.name}`);
 
     // Upload the file to S3

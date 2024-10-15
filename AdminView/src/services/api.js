@@ -104,4 +104,12 @@ export const updatePeticionCaso = (peticionId, updateData) => {
   return api.put(`/peticionCaso/${peticionId}`, updateData);
 };
 
+export const uploadFileToCase = (formData) => {
+  return api.post('/Files/upload-abogado', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
 export default api;
