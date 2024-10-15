@@ -94,23 +94,34 @@ const Biblioteca = () => {
               </div>
             )}
             {bibliotecaFiles.length > 0 ? (
-              <div className="file-grid">
-                {bibliotecaFiles.map((file, index) => (
-                  <div key={index} className="file-item">
-                    <div className="file-details">
-                      <a href={file.presignedUrl} target="_blank" rel="noopener noreferrer" className="file-name">
-                        {file.titulo}
-                      </a>
-                      <p className="file-description">{file.descripcion}</p>
-                    </div>
-                    <button onClick={() => handleDelete(file.id)} className="delete-file-button">
-                      Delete
-                    </button>
-                  </div>
-                ))}
-              </div>
+              <table className="files-grid">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {bibliotecaFiles.map((file, index) => (
+                    <tr key={index}>
+                      <td>
+                        <a href={file.presignedUrl} target="_blank" rel="noopener noreferrer">
+                          {file.titulo}
+                        </a>
+                      </td>
+                      <td>{file.descripcion}</td>
+                      <td className="file-actions">
+                        <button onClick={() => handleDelete(file.id)} className="delete-button">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             ) : (
-              <p>No files available in Biblioteca</p>
+              <p className="no-files-message">No files available in Biblioteca</p>
             )}
           </div>
 
@@ -144,7 +155,7 @@ const Biblioteca = () => {
 
             {/* Conditional rendering based on selection */}
             {uploadType === 'file' ? (
-              <input type="file" onChange={handleFileChange} />
+              <input type="file" onChange={handleFileChange} className="upload-file-input" />
             ) : (
               <input
                 type="text"
@@ -155,7 +166,7 @@ const Biblioteca = () => {
               />
             )}
 
-            <button onClick={handleUpload} className="upload-file-button">
+            <button onClick={handleUpload} className="upload-button">
               Upload
             </button>
           </div>

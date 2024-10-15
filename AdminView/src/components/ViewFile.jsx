@@ -8,9 +8,11 @@ const ViewFiles = () => {
   const [selectedAbogadoId, setSelectedAbogadoId] = useState(''); // Almacena el abogado seleccionado
   const [cases, setCases] = useState([]); // Almacena los casos del abogado seleccionado
   const [selectedCaseId, setSelectedCaseId] = useState(''); // Almacena el ID del caso seleccionado
+  const [selectedNumeroExpediente, setSelectedNumeroExpediente] = useState(''); // Almacena el ID del caso seleccionado
   const [caseFiles, setCaseFiles] = useState([]); // Almacena los archivos del caso seleccionado
   const [message, setMessage] = useState('Selecciona un abogado y expediente'); // Mensaje por defecto
   const [selectedFile, setSelectedFile] = useState(null); // Almacena el archivo a subir
+  const [uploadMessage, setUploadMessage] = useState(''); // Nuevo estado para el mensaje de subida
 
   // Cargar los abogados al montar el componente
   useEffect(() => {
@@ -32,6 +34,7 @@ const ViewFiles = () => {
     setSelectedCaseId(''); // Reinicia el caso seleccionado
     setCaseFiles([]); // Limpia los archivos del caso anterior
     setMessage('Selecciona un expediente');
+    setUploadMessage(''); // Limpiamos el mensaje de subida
     
     try {
       const response = await getCasesByAbogado(abogadoId); // Obtener casos del abogado seleccionado
@@ -43,10 +46,11 @@ const ViewFiles = () => {
   };
 
   // Manejar la selección de un expediente
-  const handleCaseSelect = async (caseId) => {
-    setSelectedCaseId(caseId); // Establece el ID del expediente seleccionado
+  const handleCaseSelect = async (caseItem) => {
+    setSelectedCaseId(caseItem.id); // ID del expediente (ya está)
+    setSelectedNumeroExpediente(caseItem.numero_expediente); // Ahora guardamos también el numero_expediente
     try {
-      const response = await getCaseFiles(caseId); // Obtener archivos del expediente seleccionado
+      const response = await getCaseFiles(caseItem.id); // Obtener archivos del expediente seleccionado
       setCaseFiles(response.data); // Guardar los archivos en el estado
       setMessage('');
     } catch (error) {
@@ -58,30 +62,43 @@ const ViewFiles = () => {
   // Manejar la subida de archivos
   const handleFileUpload = async () => {
     if (!selectedFile || !selectedCaseId || !selectedAbogadoId) {
-      setMessage('Selecciona un archivo, un expediente y un abogado antes de subir');
+      setUploadMessage('Selecciona un archivo, un expediente y un abogado antes de subir');
       return;
     }
 
     try {
       const formData = new FormData();
       formData.append('file', selectedFile);
-      formData.append('numero_expediente', selectedCaseId); // Agregamos el número de expediente
+      formData.append('numero_expediente', selectedNumeroExpediente); // Agregamos el número de expediente
       formData.append('id_abogado', selectedAbogadoId); // Agregamos el ID del abogado
 
       await uploadFileToCase(formData); // Llamar a la API para subir el archivo
-      setMessage('Archivo subido correctamente');
+      setUploadMessage('Archivo subido correctamente'); // Mostrar mensaje de éxito
       setSelectedFile(null); // Reinicia el campo de archivo
+      
+      // Refrescar el grid de archivos para mostrar el archivo recién subido
+      const response = await getCaseFiles(selectedCaseId);
+      setCaseFiles(response.data);
+      
     } catch (error) {
-      setMessage('Error subiendo el archivo');
+      setUploadMessage('Error subiendo el archivo');
     }
   };
 
   return (
     <div className="view-files-layout">
       <NavBar />
+
+      {/* Mostrar mensaje de subida en la parte superior */}
+      {uploadMessage && (
+        <div className="upload-message">
+          <p>{uploadMessage}</p>
+        </div>
+      )}
+
       <div className="view-files-container">
         <h1 className="page-title">View Case Files</h1>
-        
+
         <div className="form-and-grid">
           <div className="abogado-select-container">
             <h3 className="section-title">Seleccionar Abogado</h3>
@@ -123,7 +140,7 @@ const ViewFiles = () => {
                         <td>{caseItem.estado}</td>
                         <td>
                           <button
-                            onClick={() => handleCaseSelect(caseItem.id)}
+                            onClick={() => handleCaseSelect(caseItem)}
                             className="select-case-button"
                           >
                             Select
