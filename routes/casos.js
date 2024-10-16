@@ -202,19 +202,35 @@ router.get('/:id/files', verifyToken(['Cliente', 'Alumno', 'Abogado', 'Admin']),
       return res.status(403).json({ message: 'Access denied' });
     }
 
-    // Map files to the desired format
-    const files = caso.Files.map(file => ({
-      titulo: extractTitle(file.url_del_pdf),  // Custom function to extract title
-      descripcion: `Descripción del archivo: ${extractDescription(file.url_del_pdf)}`, // Example description extraction
-      presignedUrl: file.url_del_pdf
-    }));
+    // Generate presigned URLs for each file
+    const filesWithPresignedUrls = await Promise.all(
+      caso.Files.map(async (file) => {
+        const presignedUrl = await getPresignedUrl(file.url_del_pdf);
 
-    // Return the formatted files
-    res.json(files);
+        // Extract the file name from the URL
+        let fileName = file.url_del_pdf.substring(
+          file.url_del_pdf.lastIndexOf('/') + 1,
+          file.url_del_pdf.indexOf('?') !== -1 ? file.url_del_pdf.indexOf('?') : file.url_del_pdf.length
+        );
+
+        // Remove the "user_id_" prefix from the file name
+        fileName = fileName.substring(fileName.indexOf('_') + 1);
+
+        return {
+          titulo: fileName,  // Return the extracted file name as title
+          descripcion: `Descripción del archivo: ${fileName}`, // Example description
+          presignedUrl,  // Return the presigned URL
+        };
+      })
+    );
+
+    // Return the formatted files with presigned URLs
+    res.json(filesWithPresignedUrls);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // Example function to extract title from the PDF URL
 function extractTitle(url) {
