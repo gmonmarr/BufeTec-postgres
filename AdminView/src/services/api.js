@@ -81,17 +81,17 @@ export const getCasesByAbogado = (abogadoId) => {
 
 // Get all files from the Biblioteca
 export const getBibliotecaFiles = () => {
-  return api.get('/biblioteca'); // Adjusted to correct route
+  return api.get('/biblioteca/with-id'); 
 };
 
 // Upload a file or link to the Biblioteca
 export const uploadBibliotecaFile = (formData) => {
-  return api.post('/biblioteca/upload', formData); // Adjusted to correct route
+  return api.post('/biblioteca/upload', formData); 
 };
 
 // Delete a file from the Biblioteca by ID
 export const deleteBibliotecaFile = (fileId) => {
-  return api.delete(`/biblioteca/delete/${fileId}`); // Adjusted to correct route
+  return api.delete(`/biblioteca/delete/${fileId}`); 
 };
 
 // Get all peticiones with user info

@@ -76,7 +76,7 @@ router.delete('/delete/:id', verifyToken(['Admin', 'Abogado', 'Alumno']), async 
 router.get('/', async (req, res) => {
   try {
     const files = await Biblioteca.findAll({
-      attributes: ['titulo', 'descripcion', 'url_del_pdf'], // Select only needed fields
+      attributes: ['titulo', 'descripcion', 'url_del_pdf'], 
     });
 
     if (files.length === 0) {
@@ -89,7 +89,7 @@ router.get('/', async (req, res) => {
         return {
           titulo: file.titulo,
           descripcion: file.descripcion,
-          presignedUrl, // Include presigned URL directly
+          presignedUrl, 
         };
       })
     );
@@ -100,5 +100,35 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: 'Error fetching files from Biblioteca' });
   }
 });
+
+router.get('/with-id', async (req, res) => {
+  try {
+    const files = await Biblioteca.findAll({
+      attributes: ['id', 'titulo', 'descripcion', 'url_del_pdf'], // Select the 'id' field too
+    });
+
+    if (files.length === 0) {
+      return res.status(404).json({ message: 'No files found in Biblioteca' });
+    }
+
+    const filesData = await Promise.all(
+      files.map(async (file) => {
+        const presignedUrl = await getPresignedUrl(file.url_del_pdf);
+        return {
+          id: file.id, 
+          titulo: file.titulo,
+          descripcion: file.descripcion,
+          presignedUrl,
+        };
+      })
+    );
+
+    res.status(200).json(filesData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching files from Biblioteca' });
+  }
+});
+
 
 module.exports = router;
