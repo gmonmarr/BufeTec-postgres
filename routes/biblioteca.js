@@ -111,11 +111,17 @@ router.get('/', async (req, res) => {
 
     const filesData = await Promise.all(
       files.map(async (file) => {
-        const presignedUrl = await getPresignedUrl(file.url_del_pdf);
+        let presignedUrl = file.url_del_pdf;
+
+        // Solo presignar si la URL contiene "amazon"
+        if (file.url_del_pdf.includes('amazon')) {
+          presignedUrl = await getPresignedUrl(file.url_del_pdf);
+        }
+
         return {
           titulo: file.titulo,
           descripcion: file.descripcion,
-          presignedUrl, 
+          presignedUrl, // Usamos la URL presignada si es de Amazon S3
         };
       })
     );
@@ -126,6 +132,7 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: 'Error fetching files from Biblioteca' });
   }
 });
+
 
 
 router.get('/with-id', async (req, res) => {
