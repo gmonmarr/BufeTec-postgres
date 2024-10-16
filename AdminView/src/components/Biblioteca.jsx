@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getBibliotecaFiles, deleteBibliotecaFile, uploadBibliotecaFile } from '../services/api';
+import { getBibliotecaFiles, deleteBibliotecaFile, uploadBibliotecaFile, uploadBibliotecaLink } from '../services/api';
 import NavBar from './NavBar.jsx';
 import './Biblioteca.css';
 
@@ -8,7 +8,7 @@ const Biblioteca = () => {
   const [message, setMessage] = useState('');
   const [fileToUpload, setFileToUpload] = useState(null);
   const [linkToUpload, setLinkToUpload] = useState('');
-  const [uploadType, setUploadType] = useState('file'); 
+  const [uploadType, setUploadType] = useState('file');
   const [titulo, setTitulo] = useState('');
   const [descripcion, setDescripcion] = useState('');
 
@@ -61,14 +61,15 @@ const Biblioteca = () => {
     formData.append('titulo', titulo);
     formData.append('descripcion', descripcion);
 
-    if (uploadType === 'link') {
-      formData.append('link', linkToUpload);
-    } else {
-      formData.append('file', fileToUpload);
-    }
-
     try {
-      await uploadBibliotecaFile(formData);
+      if (uploadType === 'file') {
+        formData.append('file', fileToUpload);
+        await uploadBibliotecaFile(formData);  // Subir archivo a S3
+      } else {
+        formData.append('link', linkToUpload);
+        await uploadBibliotecaLink(formData);  // Subir solo el link a la base de datos
+      }
+
       setMessage('Upload successful');
       setFileToUpload(null);
       setLinkToUpload('');

@@ -89,6 +89,10 @@ export const uploadBibliotecaFile = (formData) => {
   return api.post('/biblioteca/upload', formData); 
 };
 
+export const uploadBibliotecaLink = (formData) => {
+  return api.post('/biblioteca/upload-link', formData); 
+};
+
 // Delete a file from the Biblioteca by ID
 export const deleteBibliotecaFile = (fileId) => {
   return api.delete(`/biblioteca/delete/${fileId}`); 

@@ -39,6 +39,32 @@ router.post('/upload', verifyToken(['Admin', 'Abogado', 'Alumno']), async (req, 
   }
 });
 
+router.post('/upload-link', verifyToken(['Admin', 'Abogado', 'Alumno']), async (req, res) => {
+  try {
+    const user_id = req.user.id;
+    const { titulo, descripcion, link } = req.body;
+
+    // Verificar que el link esté presente
+    if (!link) {
+      return res.status(400).json({ error: 'No link provided' });
+    }
+
+    // Crear la nueva entrada en la base de datos con el link proporcionado
+    const newEntry = await Biblioteca.create({
+      user_id,
+      titulo,
+      descripcion,
+      url_del_pdf: link,  // Guardamos el link directamente en la columna url_del_pdf
+    });
+
+    res.status(201).json(newEntry);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error uploading link to Biblioteca' });
+  }
+});
+
+
 
 // Delete a file from Biblioteca
 router.delete('/delete/:id', verifyToken(['Admin', 'Abogado', 'Alumno']), async (req, res) => {
@@ -101,6 +127,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+
 router.get('/with-id', async (req, res) => {
   try {
     const files = await Biblioteca.findAll({
@@ -113,12 +140,18 @@ router.get('/with-id', async (req, res) => {
 
     const filesData = await Promise.all(
       files.map(async (file) => {
-        const presignedUrl = await getPresignedUrl(file.url_del_pdf);
+        let presignedUrl = file.url_del_pdf;
+
+        // Check if the URL contains "amazon" (indicative of S3)
+        if (file.url_del_pdf.includes('amazon')) {
+          presignedUrl = await getPresignedUrl(file.url_del_pdf);
+        }
+
         return {
           id: file.id, 
           titulo: file.titulo,
           descripcion: file.descripcion,
-          presignedUrl,
+          presignedUrl, // Use the presigned URL if applicable
         };
       })
     );
@@ -130,5 +163,6 @@ router.get('/with-id', async (req, res) => {
   }
 });
 
-
 module.exports = router;
+
+
