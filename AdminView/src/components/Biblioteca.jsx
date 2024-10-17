@@ -18,7 +18,7 @@ const Biblioteca = () => {
       setBibliotecaFiles(response.data);
       setMessage('');
     } catch (error) {
-      setMessage('Error fetching biblioteca files');
+      setMessage('Error al obtener los archivos de la biblioteca');
     }
   };
 
@@ -29,10 +29,10 @@ const Biblioteca = () => {
   const handleDelete = async (fileId) => {
     try {
       await deleteBibliotecaFile(fileId);
-      setMessage('File deleted successfully');
+      setMessage('Archivo eliminado con éxito');
       setBibliotecaFiles((prevFiles) => prevFiles.filter((file) => file.id !== fileId));
     } catch (error) {
-      setMessage('Error deleting file');
+      setMessage('Error al eliminar el archivo');
     }
   };
 
@@ -48,12 +48,12 @@ const Biblioteca = () => {
 
   const handleUpload = async () => {
     if ((uploadType === 'file' && !fileToUpload) || (uploadType === 'link' && !linkToUpload)) {
-      setMessage('Please select a file or enter a link to upload');
+      setMessage('Por favor, selecciona un archivo o ingresa un enlace para subir');
       return;
     }
 
     if (!titulo || !descripcion) {
-      setMessage('Please provide a title and description');
+      setMessage('Por favor, proporciona un título y una descripción');
       return;
     }
 
@@ -70,14 +70,14 @@ const Biblioteca = () => {
         await uploadBibliotecaLink(formData);  // Subir solo el link a la base de datos
       }
 
-      setMessage('Upload successful');
+      setMessage('Subida exitosa');
       setFileToUpload(null);
       setLinkToUpload('');
       setTitulo('');
       setDescripcion('');
       fetchBibliotecaFiles();
     } catch (error) {
-      setMessage('Error uploading');
+      setMessage('Error al subir');
     }
   };
 
@@ -88,7 +88,7 @@ const Biblioteca = () => {
         <h1 className="page-title">Biblioteca</h1>
         <div className="content-wrapper">
           <div className="biblioteca-files-container">
-            <h3 className="section-title">All Files in Biblioteca</h3>
+            <h3 className="section-title">Todos los archivos en la Biblioteca</h3>
             {message && (
               <div className={`confirmation-banner ${message.includes('successful') ? 'success' : 'error'}`}>
                 {message}
@@ -98,9 +98,9 @@ const Biblioteca = () => {
               <table className="files-grid">
                 <thead>
                   <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Actions</th>
+                    <th>Título</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -114,7 +114,7 @@ const Biblioteca = () => {
                       <td>{file.descripcion}</td>
                       <td className="file-actions">
                         <button onClick={() => handleDelete(file.id)} className="delete-button">
-                          Delete
+                          Eliminar
                         </button>
                       </td>
                     </tr>
@@ -122,45 +122,45 @@ const Biblioteca = () => {
                 </tbody>
               </table>
             ) : (
-              <p className="no-files-message">No files available in Biblioteca</p>
+              <p className="no-files-message">No hay archivos disponibles en la Biblioteca</p>
             )}
           </div>
 
-          {/* Upload Section with Dropdown */}
+          {/* Sección para subir archivos o enlaces */}
           <div className="upload-file-container">
-            <h3 className="section-title">Upload New File or Link</h3>
+            <h3 className="section-title">Subir nuevo archivo o enlace</h3>
 
             <input
               type="text"
-              placeholder="Enter title"
+              placeholder="Ingresa el título"
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
               className="upload-title-input"
             />
             <textarea
-              placeholder="Enter description"
+              placeholder="Ingresa la descripción"
               value={descripcion}
               onChange={(e) => setDescripcion(e.target.value)}
               className="upload-description-input"
             />
 
-            {/* Dropdown to select file or link */}
+            {/* Desplegable para seleccionar archivo o enlace */}
             <select
               value={uploadType}
               onChange={(e) => setUploadType(e.target.value)}
               className="upload-type-dropdown"
             >
-              <option value="file">File</option>
-              <option value="link">Link</option>
+              <option value="file">Archivo</option>
+              <option value="link">Enlace</option>
             </select>
 
-            {/* Conditional rendering based on selection */}
+            {/* Renderizado condicional basado en la selección */}
             {uploadType === 'file' ? (
               <input type="file" onChange={handleFileChange} className="upload-file-input" />
             ) : (
               <input
                 type="text"
-                placeholder="Enter a link"
+                placeholder="Ingresa un enlace"
                 value={linkToUpload}
                 onChange={handleLinkChange}
                 className="upload-link-input"
@@ -168,7 +168,7 @@ const Biblioteca = () => {
             )}
 
             <button onClick={handleUpload} className="upload-button">
-              Upload
+              Subir
             </button>
           </div>
         </div>

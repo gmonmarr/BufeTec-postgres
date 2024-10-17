@@ -1,9 +1,7 @@
-// src/components/Login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api'; // Importamos la API
 import './Login.css';
-
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -30,14 +28,13 @@ const Login = () => {
         localStorage.removeItem('authToken'); // Limpiamos el token si el rol no es válido
       }
     } catch (error) {
-      setErrorMessage('Login failed. Please check your credentials.');
+      setErrorMessage('Error al iniciar sesión. Por favor verifica tus credenciales.');
     }
   };
-  
 
   return (
     <div className="login-container">
-      <h2>Login</h2>
+      <h2>Iniciar Sesión</h2>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
       <form onSubmit={handleLogin}>
         <div className="form-group">
@@ -50,7 +47,7 @@ const Login = () => {
           />
         </div>
         <div className="form-group">
-          <label>Password:</label>
+          <label>Contraseña:</label>
           <input
             type="password"
             value={password}
@@ -58,7 +55,7 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">Iniciar Sesión</button>
       </form>
     </div>
   );

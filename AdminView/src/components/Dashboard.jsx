@@ -13,41 +13,41 @@ const Dashboard = () => {
       <div className="dashboard-container">
         {/* Sección de bienvenida */}
         <header className="welcome-section">
-          <h1>Welcome to BufeteTec</h1>
-          <p>Your platform for managing legal files and roles efficiently.</p>
+          <h1>Bienvenido a BufeteTec</h1>
+          <p>Tu plataforma para gestionar archivos legales y roles de manera eficiente.</p>
         </header>
         
         {/* Sección de tarjetas de navegación */}
         <div className="cards-section">
           <div className="card" onClick={() => navigate('/view-file')}>
-            <h2>View Files</h2>
-            <p>Access and manage all your legal files.</p>
+            <h2>Ver Archivos</h2>
+            <p>Accede y gestiona todos tus archivos legales.</p>
           </div>
           <div className="card" onClick={() => navigate('/change-user-role')}>
-            <h2>Change Roles</h2>
-            <p>Manage user roles in the system.</p>
+            <h2>Cambiar Roles</h2>
+            <p>Administra los roles de usuarios en el sistema.</p>
           </div>
           <div className="card" onClick={() => navigate('/biblioteca')}>
             <h2>Biblioteca</h2>
-            <p>Upload, view, and delete files from the library.</p>
+            <p>Sube, visualiza y elimina archivos de la biblioteca.</p>
           </div>
           <div className="card" onClick={() => navigate('/peticion-caso')}>
-            <h2>Peticiones Casos</h2>
-            <p>Review and respond to case requests.</p>
+            <h2>Peticiones de Casos</h2>
+            <p>Revisa y responde a las solicitudes de casos.</p>
           </div>
         </div>
         
         {/* Sección de resumen */}
         <div className="summary-section">
-          <h3>Summary</h3>
-          <p>You have <strong>5 pending requests</strong> and <strong>3 new files</strong> to review.</p>
+          <h3>Resumen</h3>
+          <p>Tienes <strong>5 solicitudes pendientes</strong> y <strong>3 archivos nuevos</strong> para revisar.</p>
         </div>
       </div>
 
       {/* Pie de página */}
       <footer className="footer">
-        <p>© 2024 BufeteTec - All rights reserved.</p>
-        <a href="#">Privacy Policy</a> | <a href="#">Contact Us</a>
+        <p>© 2024 BufeteTec - Todos los derechos reservados.</p>
+        <a href="#">Política de Privacidad</a> | <a href="#">Contáctanos</a>
       </footer>
     </div>
   );

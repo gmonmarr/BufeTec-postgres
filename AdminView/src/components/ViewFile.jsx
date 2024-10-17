@@ -8,7 +8,7 @@ const ViewFiles = () => {
   const [selectedAbogadoId, setSelectedAbogadoId] = useState(''); // Almacena el abogado seleccionado
   const [cases, setCases] = useState([]); // Almacena los casos del abogado seleccionado
   const [selectedCaseId, setSelectedCaseId] = useState(''); // Almacena el ID del caso seleccionado
-  const [selectedNumeroExpediente, setSelectedNumeroExpediente] = useState(''); // Almacena el ID del caso seleccionado
+  const [selectedNumeroExpediente, setSelectedNumeroExpediente] = useState(''); // Almacena el ID del expediente seleccionado
   const [caseFiles, setCaseFiles] = useState([]); // Almacena los archivos del caso seleccionado
   const [message, setMessage] = useState('Selecciona un abogado y expediente'); // Mensaje por defecto
   const [selectedFile, setSelectedFile] = useState(null); // Almacena el archivo a subir
@@ -21,7 +21,7 @@ const ViewFiles = () => {
         const response = await getAbogadosWithId(); // Llamamos a la API para obtener los abogados
         setAbogados(response.data); // Guardamos los abogados en el estado
       } catch (error) {
-        setMessage('Error fetching abogados');
+        setMessage('Error al obtener abogados');
       }
     };
 
@@ -40,7 +40,7 @@ const ViewFiles = () => {
       const response = await getCasesByAbogado(abogadoId); // Obtener casos del abogado seleccionado
       setCases(response.data); // Guardar los casos en el estado
     } catch (error) {
-      setMessage('Error fetching cases for abogado');
+      setMessage('Error al obtener casos del abogado');
       setCases([]); // Si falla, limpiamos los casos
     }
   };
@@ -48,13 +48,13 @@ const ViewFiles = () => {
   // Manejar la selección de un expediente
   const handleCaseSelect = async (caseItem) => {
     setSelectedCaseId(caseItem.id); // ID del expediente (ya está)
-    setSelectedNumeroExpediente(caseItem.numero_expediente); // Ahora guardamos también el numero_expediente
+    setSelectedNumeroExpediente(caseItem.numero_expediente); // Ahora guardamos también el número de expediente
     try {
       const response = await getCaseFiles(caseItem.id); // Obtener archivos del expediente seleccionado
       setCaseFiles(response.data); // Guardar los archivos en el estado
       setMessage('');
     } catch (error) {
-      setMessage('Error fetching case files');
+      setMessage('Error al obtener archivos del expediente');
       setCaseFiles([]); // Si falla, limpiamos los archivos
     }
   };
@@ -81,7 +81,7 @@ const ViewFiles = () => {
       setCaseFiles(response.data);
       
     } catch (error) {
-      setUploadMessage('Error subiendo el archivo');
+      setUploadMessage('Error al subir el archivo');
     }
   };
 
@@ -97,7 +97,7 @@ const ViewFiles = () => {
       )}
 
       <div className="view-files-container">
-        <h1 className="page-title">View Case Files</h1>
+        <h1 className="page-title">Ver Archivos del Expediente</h1>
 
         <div className="form-and-grid">
           <div className="abogado-select-container">
@@ -126,7 +126,7 @@ const ViewFiles = () => {
                       <th>Expediente</th>
                       <th>Descripción</th>
                       <th>Estado</th>
-                      <th>Select</th>
+                      <th>Seleccionar</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -143,7 +143,7 @@ const ViewFiles = () => {
                             onClick={() => handleCaseSelect(caseItem)}
                             className="select-case-button"
                           >
-                            Select
+                            Seleccionar
                           </button>
                         </td>
                       </tr>
@@ -152,7 +152,7 @@ const ViewFiles = () => {
                 </table>
               </div>
             ) : (
-              <div className="no-cases">No cases available</div>
+              <div className="no-cases">No hay expedientes disponibles</div>
             )}
           </div>
         </div>
@@ -172,7 +172,7 @@ const ViewFiles = () => {
                   </li>
                 ))
               ) : (
-                <p>No files available for this case</p>
+                <p>No hay archivos disponibles para este expediente</p>
               )}
             </ul>
           )}

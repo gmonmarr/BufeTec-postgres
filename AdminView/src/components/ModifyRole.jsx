@@ -21,7 +21,7 @@ const ModifyRole = () => {
         setUsers(response.data);
         setFilteredUsers(response.data); // Inicialmente los usuarios no filtrados
       } catch (error) {
-        setMessage('Error fetching users');
+        setMessage('Error al obtener los usuarios');
       }
     };
 
@@ -57,12 +57,12 @@ const ModifyRole = () => {
 
     try {
       await modifyUserRole(selectedUserId, data);
-      setMessage('User role updated successfully');
+      setMessage('El rol del usuario se ha actualizado correctamente');
       const response = await getUsers();
       setUsers(response.data);
       setFilteredUsers(response.data); 
     } catch (error) {
-      setMessage('Error updating user role');
+      setMessage('Error al actualizar el rol del usuario');
     }
   };
 
@@ -70,31 +70,31 @@ const ModifyRole = () => {
     <div className="modify-role-layout">
       <NavBar />
       <div className="modify-role-container">
-        <h1 className="page-title">Change User Role</h1> {/* Título de la página */}
+        <h1 className="page-title">Cambiar Rol de Usuario</h1> {/* Título de la página */}
         <div className="content-wrapper">
           {/* Formulario a la izquierda */}
           <div className="modify-role-form-container">
-            <h2 className="modify-role-title">Modify User Role</h2>
+            <h2 className="modify-role-title">Modificar Rol de Usuario</h2>
             {message && (
-              <div className={`modify-role-confirmation-banner ${message === 'User role updated successfully' ? 'success' : 'error'}`}>
+              <div className={`modify-role-confirmation-banner ${message === 'El rol del usuario se ha actualizado correctamente' ? 'success' : 'error'}`}>
                 {message}
               </div>
             )}
             <form onSubmit={handleSubmit}>
               <div className="modify-role-input-container">
-                <label className="modify-role-label">Selected User ID</label>
-                <input type="text" value={selectedUserId} className="modify-role-input" placeholder="User ID" readOnly />
+                <label className="modify-role-label">ID de Usuario Seleccionado</label>
+                <input type="text" value={selectedUserId} className="modify-role-input" placeholder="ID de Usuario" readOnly />
               </div>
 
               <div className="modify-role-input-container">
-                <label className="modify-role-label">Current Role</label>
-                <input type="text" value={selectedUserRole} className="modify-role-input" placeholder="Current Role" readOnly />
+                <label className="modify-role-label">Rol Actual</label>
+                <input type="text" value={selectedUserRole} className="modify-role-input" placeholder="Rol Actual" readOnly />
               </div>
 
               <div className="modify-role-input-container">
-                <label className="modify-role-label">Select New Role</label>
+                <label className="modify-role-label">Seleccionar Nuevo Rol</label>
                 <select value={newRole} onChange={handleRoleChange} className="modify-role-input">
-                  <option value="">Select a role</option>
+                  <option value="">Selecciona un rol</option>
                   <option value="Abogado">Abogado</option>
                   <option value="Cliente">Cliente</option>
                   <option value="Alumno">Alumno</option>
@@ -104,23 +104,23 @@ const ModifyRole = () => {
               {newRole === 'Abogado' && (
                 <>
                   <div className="modify-role-input-container">
-                    <label className="modify-role-label">Specialty</label>
+                    <label className="modify-role-label">Especialidad</label>
                     <input
                       type="text"
                       value={lawyerDetails.especialidad}
                       onChange={(e) => setLawyerDetails({ ...lawyerDetails, especialidad: e.target.value })}
                       className="modify-role-input"
-                      placeholder="Enter Specialty"
+                      placeholder="Ingresa la especialidad"
                     />
                   </div>
                   <div className="modify-role-input-container">
-                    <label className="modify-role-label">Experience</label>
+                    <label className="modify-role-label">Experiencia</label>
                     <input
                       type="text"
                       value={lawyerDetails.experiencia}
                       onChange={(e) => setLawyerDetails({ ...lawyerDetails, experiencia: e.target.value })}
                       className="modify-role-input"
-                      placeholder="Enter Experience"
+                      placeholder="Ingresa la experiencia"
                     />
                   </div>
                 </>
@@ -128,27 +128,27 @@ const ModifyRole = () => {
 
               {newRole === 'Cliente' && (
                 <div className="modify-role-input-container">
-                  <label className="modify-role-label">Address</label>
+                  <label className="modify-role-label">Dirección</label>
                   <input
                     type="text"
                     value={clientDetails.direccion}
                     onChange={(e) => setClientDetails({ ...clientDetails, direccion: e.target.value })}
                     className="modify-role-input"
-                    placeholder="Enter Address"
+                    placeholder="Ingresa la dirección"
                   />
                 </div>
               )}
 
-              <button type="submit" className="modify-role-button">Modify Role</button>
+              <button type="submit" className="modify-role-button">Modificar Rol</button>
             </form>
           </div>
 
           {/* Grid de usuarios a la derecha */}
           <div className="users-grid-container">
-            <h3 className="users-grid-title">Select User</h3>
+            <h3 className="users-grid-title">Seleccionar Usuario</h3>
             <input
               type="text"
-              placeholder="Search by name or email"
+              placeholder="Buscar por nombre o email"
               value={searchQuery}
               onChange={handleSearchChange}
               className="search-input"
@@ -159,11 +159,11 @@ const ModifyRole = () => {
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Name</th>
+                      <th>Nombre</th>
                       <th>Email</th>
-                      <th>Birth Date</th>
-                      <th>Current Role</th>
-                      <th>Select</th>
+                      <th>Fecha de Nacimiento</th>
+                      <th>Rol Actual</th>
+                      <th>Seleccionar</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -176,7 +176,7 @@ const ModifyRole = () => {
                         <td>{user.rol}</td>
                         <td>
                           <button onClick={() => handleUserSelect(user.id, user.rol)} className="select-user-button">
-                            Select
+                            Seleccionar
                           </button>
                         </td>
                       </tr>
@@ -185,7 +185,7 @@ const ModifyRole = () => {
                 </table>
               </div>
             ) : (
-              <div className="no-users">No users available</div>
+              <div className="no-users">No hay usuarios disponibles</div>
             )}
           </div>
         </div>

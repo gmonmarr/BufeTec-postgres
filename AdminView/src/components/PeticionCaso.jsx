@@ -17,7 +17,7 @@ const PeticionCasoGrid = () => {
         const response = await getPeticionCasos(); // Llamamos a la API para obtener las peticiones
         setPeticiones(response.data); // Guardamos las peticiones en el estado
       } catch (error) {
-        setMessage('Error fetching petitions');
+        setMessage('Error al obtener las peticiones');
         setMessageType('error');
       }
     };
@@ -27,7 +27,7 @@ const PeticionCasoGrid = () => {
         const response = await getAbogadosWithId(); // Llamamos a la API para obtener los abogados
         setAbogados(response.data); // Guardamos los abogados en el estado
       } catch (error) {
-        setMessage('Error fetching abogados');
+        setMessage('Error al obtener los abogados');
         setMessageType('error');
       }
     };
@@ -61,7 +61,7 @@ const PeticionCasoGrid = () => {
         )
       );
     } catch (error) {
-      setMessage('Error actualizando la petición');
+      setMessage('Error al actualizar la petición');
       setMessageType('error');
     }
   };

@@ -29,12 +29,12 @@ const NavBar = () => {
 
   return (
     <div className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-      <button className="nav-button" onClick={() => navigate('/')}>Home</button>
-      <button className="nav-button" onClick={() => navigate('/view-file')}>View File</button>
-      <button className="nav-button" onClick={() => navigate('/change-user-role')}>Change Role</button>
+      <button className="nav-button" onClick={() => navigate('/')}>Inicio</button>
+      <button className="nav-button" onClick={() => navigate('/view-file')}>Ver Archivo</button>
+      <button className="nav-button" onClick={() => navigate('/change-user-role')}>Cambiar Rol</button>
       <button className="nav-button" onClick={() => navigate('/biblioteca')}>Biblioteca</button>
-      <button className="nav-button" onClick={() => navigate('/peticion-caso')}>Peticiones Casos</button>
-      <button className="nav-button logout" onClick={handleLogout}>Logout</button>
+      <button className="nav-button" onClick={() => navigate('/peticion-caso')}>Peticiones de Casos</button>
+      <button className="nav-button logout" onClick={handleLogout}>Cerrar Sesión</button>
     </div>
   );
 };
