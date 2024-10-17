@@ -8,7 +8,7 @@ const Usuario = require('../model/Usuario');
 const Caso = require("../model/Caso")
 
 // Get all Abogados (Only Admin and Abogado can access)
-router.get('/', verifyToken(['Admin', 'Abogado']), async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const abogados = await Abogado.findAll({
       include: {
