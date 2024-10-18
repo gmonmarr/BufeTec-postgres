@@ -1,0 +1,132 @@
+.view-files-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.view-files-container {
+  width: 100%;
+  max-width: 1200px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.page-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #2541B2;
+  margin-bottom: 20px;
+}
+
+.form-and-grid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.abogado-select-container {
+  margin-bottom: 20px;
+}
+
+.abogado-dropdown {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.case-select-container {
+  width: 100%;
+}
+
+.cases-grid-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.cases-grid-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cases-grid-table th,
+.cases-grid-table td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ccc;
+}
+
+.cases-grid-table th {
+  background-color: #f0f0f0;
+}
+
+.cases-grid-table td {
+  white-space: nowrap;
+}
+
+.cases-grid-table td:nth-child(2) {
+  width: 60%; /* La columna de descripción ocupa el máximo ancho */
+}
+
+.select-case-button {
+  background-color: #2541B2;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.select-case-button:hover {
+  background-color: #1d3790;
+}
+
+.file-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.file-item {
+  margin-bottom: 10px;
+}
+
+.file-item a {
+  color: #2541B2;
+  text-decoration: none;
+}
+
+.file-item a:hover {
+  text-decoration: underline;
+}
+
+.upload-file-section {
+  margin-top: 20px;
+}
+
+.upload-button {
+  margin-top: 10px;
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.upload-button:hover {
+  background-color: #218838;
+}
+
+.highlighted {
+  background-color: #d9e4ff;
+}
+
+.no-cases {
+  font-size: 16px;
+  color: #666;
+}

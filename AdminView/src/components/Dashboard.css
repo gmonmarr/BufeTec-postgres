@@ -1,0 +1,97 @@
+/* Layout principal del dashboard */
+.dashboard-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 60px; /* Asegura que no se superponga con la NavBar */
+  background-color: #f7f9fc;
+  min-height: 100vh;
+}
+
+.dashboard-container {
+  width: 80%;
+  max-width: 1200px;
+  margin-top: 40px;
+}
+
+/* Sección de bienvenida */
+.welcome-section {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.welcome-section h1 {
+  font-size: 3rem; /* Aumentado para mayor prominencia */
+  color: #2541B2;
+  margin-bottom: 20px;
+}
+
+.welcome-section p {
+  font-size: 1.5rem; /* Aumentado para destacar más */
+  color: #666;
+}
+
+/* Sección de tarjetas de navegación */
+.cards-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Aumentado el ancho mínimo a 300px */
+  gap: 30px; /* Más espacio entre tarjetas */
+  margin-bottom: 60px; /* Aumentado para mayor separación */
+}
+
+.card {
+  background-color: #fff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Sombra más prominente */
+  padding: 30px; /* Aumentado el padding para más espacio */
+  border-radius: 15px; /* Bordes más redondeados */
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-10px); /* Más desplazamiento en hover */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Sombra más intensa en hover */
+}
+
+.card h2 {
+  font-size: 2rem; /* Aumentado el tamaño del título */
+  color: #2541B2;
+  margin-bottom: 15px;
+}
+
+.card p {
+  font-size: 1.2rem; /* Aumentado el tamaño del texto */
+  color: #666;
+}
+
+/* Sección de resumen */
+.summary-section {
+  background-color: #e3e7f1;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 1.5rem; /* Aumentado el tamaño de la fuente */
+  color: #333;
+}
+
+/* Pie de página */
+.footer {
+  margin-top: 80px;
+  padding: 30px;
+  text-align: center;
+  background-color: #1c1c1e;
+  color: white;
+  width: 100%;
+}
+
+.footer a {
+  color: #ddd;
+  text-decoration: none;
+  margin: 0 15px;
+}
+
+.footer a:hover {
+  color: #fff;
+  text-decoration: underline;
+}

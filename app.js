@@ -2,21 +2,35 @@
 
 require("dotenv").config();
 const express = require("express");
-const cors = require('cors');
-const app = express();
-const port = process.env.PORT || 3001;
+const cors = require("cors");
+const fileUpload = require("express-fileupload");
 const sequelize = require("./config/database");
 
+const app = express();
+const port = process.env.PORT || 3001;
+
+const corsOptions = {
+  origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: ['Authorization', 'Content-Type'],
+  credentials: true,
+};
 // Middleware to parse JSON requests
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
+app.use(fileUpload());
 
-// Test the database connection and sync models
+// Import models to ensure they are registered with Sequelize
+const Caso = require("./model/Caso");
+const File = require("./model/File");
+const CasoFile = require("./model/CasoFile"); // Import the join table explicitly
+
+// Sync the models with the database
 sequelize
   .authenticate()
   .then(() => {
     console.log("Connection has been established successfully.");
-    return sequelize.sync(); // Syncs the models with the database
+    return sequelize.sync(); // Ensure all models, including join tables, are synced
   })
   .catch((err) => {
     console.error("Unable to connect to the database:", err);
@@ -29,12 +43,15 @@ app.get("/", (req, res) => {
 
 // Import routes
 const usuarioRoutes = require("./routes/usuarios");
+const adminRoutes = require("./routes/admin");
 const abogadoRoutes = require("./routes/abogados");
 const clienteRoutes = require("./routes/clientes");
 const alumnoRoutes = require("./routes/alumnos");
 const casoRoutes = require("./routes/casos");
-const citaRoutes = require("./routes/citas");
-const chatRoutes = require('./routes/chat');
+const chatRoutes = require("./routes/chat");
+const fileRoutes = require("./routes/Files");
+const bibliotecaRoutes = require("./routes/biblioteca");
+const peticionCaso = require("./routes/peticionCaso");
 
 // Use routes
 app.use("/api/usuarios", usuarioRoutes);
@@ -42,8 +59,11 @@ app.use("/api/abogados", abogadoRoutes);
 app.use("/api/clientes", clienteRoutes);
 app.use("/api/alumnos", alumnoRoutes);
 app.use("/api/casos", casoRoutes);
-app.use("/api/citas", citaRoutes);
-app.use('/api/chat', chatRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/chat", chatRoutes);
+app.use("/api/files", fileRoutes);
+app.use("/api/biblioteca", bibliotecaRoutes);
+app.use("/api/peticionCaso", peticionCaso)
 
 // Start the server
 const server = app.listen(port, () => {

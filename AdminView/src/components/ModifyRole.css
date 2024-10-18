@@ -1,0 +1,190 @@
+/* Estilos generales */
+.modify-role-container {
+    padding: 20px;
+    background-color: #f0f2f5;
+}
+
+.page-title {
+    margin-top: 50px;
+    font-size: 2.5rem;
+    color: #2541B2;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* Contenedor para el formulario y el grid */
+.content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    max-width: 1400px; /* Más ancho para acomodar el grid */
+    margin: 0 auto;
+}
+
+.modify-role-form-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex: 1 1 30%; /* Menos espacio para el formulario */
+}
+
+/* Título del formulario */
+.modify-role-title {
+    font-size: 1.8rem;
+    color: #2541B2;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Input fields */
+.modify-role-input-container {
+    margin-bottom: 20px;
+}
+
+.modify-role-label {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.modify-role-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.modify-role-input:focus {
+    border-color: #2541B2;
+}
+
+/* Botón del formulario */
+.modify-role-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #2541B2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modify-role-button:hover {
+    background-color: #1f3a93;
+}
+
+/* Mensajes de confirmación */
+.modify-role-confirmation-banner {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.modify-role-confirmation-banner.success {
+    background-color: #28a745;
+    color: white;
+}
+
+.modify-role-confirmation-banner.error {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Estilos del grid de usuarios */
+.users-grid-container {
+    flex: 1 1 70%; /* Ocupa más espacio en la pantalla */
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.users-grid-title {
+    font-size: 1.8rem;
+    color: #2541B2;
+    margin-bottom: 20px;
+    margin-top: 50px;
+}
+
+/* Input de búsqueda */
+.search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Estilos de la tabla */
+.users-grid-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto; /* Ajusta el ancho automáticamente */
+}
+
+.users-grid-table th, .users-grid-table td {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    white-space: nowrap; /* Evita que el texto se divida en múltiples líneas */
+}
+
+.users-grid-table th {
+    background-color: #2541B2;
+    color: white;
+}
+
+.users-grid-table tr:hover {
+    background-color: #f0f4ff;
+}
+
+/* Botón de seleccionar */
+.select-user-button {
+    background-color: #2541B2;
+    color: white;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.select-user-button:hover {
+    background-color: #1f3a93;
+}
+
+/* Sin usuarios */
+.no-users {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #dc3545;
+    margin-top: 20px;
+}
+
+/* Responsividad para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .content-wrapper {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .modify-role-form-container, .users-grid-container {
+        max-width: 100%;
+    }
+
+    .users-grid-table th, .users-grid-table td {
+        padding: 10px;
+    }
+
+    .select-user-button {
+        padding: 6px 10px;
+    }
+}

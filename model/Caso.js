@@ -1,10 +1,5 @@
-// model/Caso.js
-
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Abogado = require('./Abogado');
-const Cliente = require('./Cliente');
-const Alumno = require('./Alumno');
 
 const Caso = sequelize.define('Caso', {
   id: {
@@ -13,41 +8,23 @@ const Caso = sequelize.define('Caso', {
     autoIncrement: true,
     field: 'ID_Caso'
   },
-  folio: {
-    type: DataTypes.INTEGER,
-    unique: true
-  },
   numero_expediente: {
-    type: DataTypes.INTEGER,
-    unique: true
+    type: DataTypes.STRING(10),
+    unique: true,
+    field: 'numero_expediente'
   },
   descripcion: DataTypes.TEXT,
   estado: DataTypes.STRING(50),
   id_abogado: {
     type: DataTypes.INTEGER,
-    references: {
-      model: Abogado,
-      key: 'ID_Abogado'
-    },
-    allowNull: false,
-    onDelete: 'SET NULL'
+    allowNull: false
   },
   id_cliente: {
     type: DataTypes.INTEGER,
-    references: {
-      model: Cliente,
-      key: 'ID_Cliente'
-    },
-    allowNull: false,
-    onDelete: 'CASCADE'
+    allowNull: false
   },
   id_alumno: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: Alumno,
-      key: 'ID_Alumno'
-    },
-    onDelete: 'SET NULL'
+    type: DataTypes.INTEGER
   }
 });
 
